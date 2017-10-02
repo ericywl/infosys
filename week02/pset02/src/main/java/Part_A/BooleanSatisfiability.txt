@@ -1,0 +1,22 @@
+(!A + B) & A & (B -> C) & (C -> D) & (!D)
+NOT SATISFIABLE
+
+For the formula to be satisfiable, all individual parts separated by & have to be true.
+So we can examine them one by one.
+
+For A and !D,
+it is easy to see that A = 1, D = 0, for the formula to be satisfiable.
+
+For (!A + B),
+since we know that A has to be 1, !A = 0.
+In that case B = 1, or the part would be false.
+
+For (B -> C),
+since B = 1, C has to be true, therefore C = 1.
+
+For (C -> D),
+since C = 1, D also has to be true, therefore D = 1.
+But this contradicts with the above conclusion that D = 0.
+In fact if D = 0, C -> D can never be true.
+
+Since there is a contradiction, this boolean formula is not satisfiable.
