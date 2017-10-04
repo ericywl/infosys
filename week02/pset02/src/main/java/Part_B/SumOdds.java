@@ -9,7 +9,7 @@ package Part_B;
 
    public class SumOdds {
         public static void main (String[] args) {
-            int number = 10134;
+            int number = -134;
             System.out.println(sumOdd(number));
 
             }
@@ -19,9 +19,15 @@ package Part_B;
                 return 0;
             }
 
+            if (number < -9 && number % 2 != 0) {
+                return -number % 10 + sumOdd(number / 10);
+            }
+
             if (number % 2 == 0) {
                 return sumOdd(number / 10);
             }
+
+
 
             return number % 10 + sumOdd(number / 10);
         }
