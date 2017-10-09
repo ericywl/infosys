@@ -1,50 +1,31 @@
 package Part_A;
 
-/**
- * Created by jit_biswas on 10/8/2017.
- */
-import junit.framework.*;
-import junit.framework.Test;
-
 import org.junit.*;
 
-public class TestCalculator extends TestCase {
+import static org.junit.Assert.*;
 
-    // constructor
-    public TestCalculator (String name) {
-        super(name);
-    }
-
-    @org.junit.Test
-    public void testFourOperations () {
-         // Enter your code here
-
-
-
-
-    }
-
-   @org.junit.Test
-    public void testDivideByZero () {
+public class TestCalculator {
+    @Test
+    public void testFourOperations() {
+        // Enter your code here
         Calculator c = new Calculator();
-        try {
-             // Enter your code here
 
-
-
-        } catch (IllegalArgumentException e) {
-            // do nothing since exception has been correctly raised
-        }
+        assertEquals("Failed Addition", 9, c.add(4, 5));
+        assertEquals("Failed Subtraction", 2, c.sub(5, 3));
+        assertEquals("Failed Multiplication", 42, c.mul(6, 7));
+        assertEquals("Failed Division", 1, c.divInt(6, 4));
     }
 
-    // method create a test suite
-    public static Test suite() {
-        return new TestSuite(TestCalculator.class);
+    @Test (expected = IllegalArgumentException.class)
+    public void testDivideByZero() {
+        Calculator c = new Calculator();
+        c.divInt(1, 0);
+
     }
 
     // the main method
     public static void main(String args[]) {
-        junit.textui.TestRunner.run(suite());
+        org.junit.runner.JUnitCore.main("Part_A.TestCalculator");
     }
 }
 

@@ -1,4 +1,5 @@
 package Part_A;
+
 import java.util.*;
 
 // Employee class holds the data about an employee's salary
@@ -13,26 +14,23 @@ public class Employee {
         // Enter your code here
 
 
-
-
-
-
         // store the employee's name and number
         // Enter your code here
-
-
-
-
 
 
         // initialize the vector that will store the employee's salary
         salary_components = new Vector();
     }
+
     // method to get the employee's name
-    public String getEmpName() { return name; }
+    public String getEmpName() {
+        return name;
+    }
 
     // method to get the employee number
-    public String getEmpNumber() { return number; }
+    public String getEmpNumber() {
+        return number;
+    }
 
     // method to assign salary earned for a particular salary component
     public void assignSalary(String component, int amount)
@@ -51,8 +49,8 @@ public class Employee {
 
         // find the salary component
         for (Enumeration e = salary_components.elements();
-             e.hasMoreElements();) {
-            SalaryComponent c = (SalaryComponent)e.nextElement();
+             e.hasMoreElements(); ) {
+            SalaryComponent c = (SalaryComponent) e.nextElement();
             if (component.equals(c.getComponentName()))
                 return c.getComponentAmount();
         } // for
@@ -64,21 +62,17 @@ public class Employee {
     public int getTotalPay() {
         // if the employee has earned any salary (for example, for a new employee), return 0
         if (salary_components.isEmpty()) throw new RuntimeException("No salary records exist for "
-                                                   + this.getEmpName());
+                + this.getEmpName());
         else {
             // otherwise, find the total pay
             // Enter your code here
 
 
-
-
-
-
-            }
-            return totalpay;
         }
-    }
 
+        return 0;
+    }
 }
+
 
 
