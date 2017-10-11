@@ -13,10 +13,11 @@ public class Singleton {
         if (instance == null) {
             instance = new Singleton ();
         }
+
         return instance;
     }
 
-    public static void showMessage () {
+    public void showMessage () {
         System.out.println ("In Singleton:: showmessage()");
     }
 }

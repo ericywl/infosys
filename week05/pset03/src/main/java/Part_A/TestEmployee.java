@@ -24,12 +24,16 @@ public class TestEmployee extends TestCase {
         try {
             Employee e = new Employee("Peter Brown", null);
             fail("Constructor allows null employee number");
-        } catch (RuntimeException e) {}
+        } catch (RuntimeException e) {
+            // do nothing
+        }
 
         try {
             Employee e = new Employee(null, "9876543");
             fail("Constructor allows null employee name");
-        } catch (RuntimeException e) {}
+        } catch (RuntimeException e) {
+            // do nothing
+        }
     }
 
     // method to test the assigning and retrieval of salary components
@@ -50,7 +54,9 @@ public class TestEmployee extends TestCase {
         try {
             emp.getSalary("Transportation");
             fail("fail to catch non-existent salary component ");
-        } catch (RuntimeException e) { }
+        } catch (RuntimeException e) {
+            // do nothing
+        }
     }
 
 
@@ -73,7 +79,9 @@ public class TestEmployee extends TestCase {
 
             emp2.getTotalPay();
             fail("fail to catch non-existent salary component ");
-        } catch (RuntimeException e) { }
+        } catch (RuntimeException e) {
+            // do nothing
+        }
     }
 
 

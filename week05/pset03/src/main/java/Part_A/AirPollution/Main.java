@@ -1,10 +1,6 @@
 package Part_A.AirPollution;
 
-import java.*;
-import java.io.*;
-
-public class Main
-{
+public class Main {
     public static void main(String[] args)
     {
         AirPollutionAlert singaporeAlert = new AirPollutionAlert();
@@ -15,7 +11,6 @@ public class Main
         singaporeAlert.setAirPollutionIndex(120);
         singaporeAlert.unregister(man);
         singaporeAlert.setAirPollutionIndex(300);
-
     }
 }
 

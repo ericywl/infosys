@@ -1,11 +1,12 @@
 package Part_A.TaxVisitor;
+
 import java.util.ArrayList;
 
 public class MyClass {
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         System.out.println("This is the Tax Visitor program. Total tax:");
 
-        ArrayList<Visitable> items = new ArrayList<Visitable>();
+        ArrayList<Visitable> items = new ArrayList<>();
         TaxVisitor tax = new TaxVisitor("TAXHOLIDAY");
 
         items.add(new Car(100000));
@@ -15,6 +16,7 @@ public class MyClass {
         for (Visitable o : items) {
             o.accept(tax);
         }
-        System.out.println (tax.getTotal());
+
+        System.out.println(tax.getTotal());
     }
 }

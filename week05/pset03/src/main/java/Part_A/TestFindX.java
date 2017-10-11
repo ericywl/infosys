@@ -31,8 +31,7 @@ public class TestFindX extends TestCase {
         assertEquals("Failed Assertion for Counting Number of Visits", 3, f.getVisitNumber());
     }
 
-        // method create a test suite
-
+    // method create a test suite
     public static Test suite() {
         return new TestSuite(TestFindX.class);
     }
