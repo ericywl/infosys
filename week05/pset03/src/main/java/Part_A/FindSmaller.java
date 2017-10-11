@@ -1,10 +1,6 @@
 package Part_A;
 
 public class FindSmaller {
-    //constructor
-    public FindSmaller() {
-    }
-
     public int findSmaller(int x, int[] a) {
         int len = a.length;
         int count = 0;

@@ -1,19 +1,22 @@
 package Part_A.Singleton;
 
+/**
+ * Created by jit_biswas on 11/28/2016.
+ */
 public class Singleton {
+
     private static Singleton instance = null;
 
-    private Singleton() {
-    }
+    private Singleton() {}
 
-    public static Singleton getInstance() {
+    public static Singleton getInstance () {
         if (instance == null) {
-            instance = new Singleton();
+            instance = new Singleton ();
         }
         return instance;
     }
 
-    public static void showMessage() {
-        System.out.println("In Singleton:: showmessage()");
+    public static void showMessage () {
+        System.out.println ("In Singleton:: showmessage()");
     }
 }

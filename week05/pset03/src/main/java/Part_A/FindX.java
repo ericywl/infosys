@@ -1,18 +1,18 @@
 package Part_A;
 
 public class FindX {
-    private int visitNumber = 0;
+    private int visitnumber = 0;
 
     public FindX() {
-        visitNumber++;
+        visitnumber++;
     }
 
     public int getVisitNumber() {
-        return visitNumber;
+        return visitnumber;
     }
 
     public int findX(int x, int[] A) {
-        visitNumber++;
+        visitnumber++;
         int len = A.length;
 
         for (int i = 0; i < len; i++) {

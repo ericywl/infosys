@@ -1,6 +1,5 @@
 package Part_A;
 
-import junit.framework.*;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

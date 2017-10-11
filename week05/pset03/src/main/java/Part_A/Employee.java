@@ -70,9 +70,8 @@ public class Employee {
 
         }
 
-        return 0;
+        return 0; // totalpay
     }
 }
-
 
 

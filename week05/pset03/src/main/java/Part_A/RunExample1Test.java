@@ -6,6 +6,7 @@ import org.junit.runner.notification.Failure;
 
 
 public class RunExample1Test {
+
     public static void main (String[] args) {
         Result result = JUnitCore.runClasses(Example1Test.class);
 
@@ -15,4 +16,5 @@ public class RunExample1Test {
 
         System.out.println(result.wasSuccessful());
     }
+
 }
