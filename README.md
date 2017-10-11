@@ -1,3 +1,3 @@
 # JavaAndroid
 
-All PSets are under weekxx/psetyy/src/main/java
+All PSets are under weekXX/psetYY/src/main/java
