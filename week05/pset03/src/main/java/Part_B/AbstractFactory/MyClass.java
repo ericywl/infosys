@@ -2,7 +2,6 @@ package Part_B.AbstractFactory;
 
 public class MyClass {
     public static void main (String[] args) {
-
         //first create a factory for producing boards
         AbstractFactory bf = FactoryProducer.getFactory("BOARD");
 
@@ -19,7 +18,6 @@ public class MyClass {
         b3.configure();
 
         // next create a component factory
-
         AbstractFactory cf = FactoryProducer.getFactory("COMPONENT");
 
         // now get a resistor from the factory

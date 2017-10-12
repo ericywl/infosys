@@ -1,8 +1,5 @@
 package Part_B.Proxy;
 
-/**
- * From Tutorialspoint
- **/
 public class ProxyImage implements Image {
 
     private RealImage realImage;
@@ -17,6 +14,7 @@ public class ProxyImage implements Image {
         if (realImage == null) {
             realImage = new RealImage(fileName);
         }
+
         realImage.display();
     }
 

@@ -3,7 +3,6 @@ package Part_B.FlyWeight;
 import java.util.HashMap;
 
 public class ShapeFactory {
-
     private static final HashMap<String, Shape> circleMap = new HashMap<>();
 
     public static Shape getCircle(String color) {
@@ -14,6 +13,7 @@ public class ShapeFactory {
             circleMap.put(color, circle);
             System.out.println("Creating circle of color : " + color);
         }
+
         return circle;
     }
 }

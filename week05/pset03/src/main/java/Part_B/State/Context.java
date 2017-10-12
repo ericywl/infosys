@@ -1,8 +1,5 @@
 package Part_B.State;
 
-/**
- * Created by jit_biswas on 10/11/2017.
- */
 public class Context {
     private State state;
 

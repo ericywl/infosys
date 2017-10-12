@@ -1,10 +1,6 @@
 package Part_B.Proxy;
 
-/**
- * From Tutorialspoint
- **/
 public class RealImage implements Image {
-
     private String filename;
 
     public RealImage(String filename) {
