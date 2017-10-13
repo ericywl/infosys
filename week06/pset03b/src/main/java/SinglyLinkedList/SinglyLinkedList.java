@@ -1,4 +1,4 @@
-package Part_B.SinglyLinkedList;
+package SinglyLinkedList;
 
 import java.util.Scanner;
 
