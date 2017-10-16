@@ -1,5 +1,7 @@
 package Stack;
 
+import java.util.Scanner;
+
 class EmptyStackException extends Exception {
     public EmptyStackException(String message) {
         super(message);
@@ -34,11 +36,9 @@ class Node {
 
 public class Stack {
     private Node top;
-    private int size;
 
     public Stack() {
         top = null;
-        size = 0;
     }
 
     public void push(int data) {
@@ -62,12 +62,12 @@ public class Stack {
         return n;
     }
 
-    public Node peek() throws EmptyStackException {
+    public int peek() throws EmptyStackException {
         if (isEmpty()) {
             throw new EmptyStackException("Stack is empty");
         }
 
-        return top;
+        return top.getData();
     }
 
     public boolean isEmpty() {
@@ -80,30 +80,90 @@ public class Stack {
         }
 
         Node temp = top;
+        StringBuilder outputBuilder = new StringBuilder();
 
         while (temp != null) {
-            System.out.println(temp.getData());
+            outputBuilder.append(temp.getData());
+            outputBuilder.append(" -> ");
             temp = temp.getNextNode();
         }
 
-        System.out.println("");
+        String output = outputBuilder.toString();
+        int outputLength = output.length();
+        System.out.println(output.substring(0, outputLength - 4));
     }
 
     public static void main(String[] args) {
+        Scanner reader = new Scanner(System.in);
         Stack stack = new Stack();
+        char ch;
+        System.out.println("Stack Test");
 
-        try {
-            stack.push(2);
-            stack.push(5);
-            stack.push(20);
-            stack.display();
+        do {
+            System.out.println("\nStack Operations\n");
+            System.out.println("1. Push");
+            System.out.println("2. Top");
+            System.out.println("3. Pop");
+            System.out.println("4. isEmpty");
+            System.out.println("5. displayStack");
 
-            Node n = stack.pop();
-            System.out.println(n.getData());
-            System.out.println(n.getNextNode() + "\n");
-            System.out.println(stack.peek().getData());
-        } catch (EmptyStackException ex) {
-            System.out.println(ex);
-        }
+            System.out.print("Enter the operation code: ");
+            int choice = reader.nextInt();
+
+            switch(choice) {
+                case 1:
+                    System.out.print("Enter integer element to push: ");
+                    int data = reader.nextInt();
+                    stack.push(data);
+                    try {
+                        System.out.print("Stack = ");
+                        stack.display();
+                    } catch (EmptyStackException ex) {
+                        System.out.println(ex);
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("Peeking top element.");
+                    try {
+                        System.out.println("Element = " + stack.peek());
+                    } catch (EmptyStackException ex) {
+                        System.out.println(ex);
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Popping top element.");
+                    try {
+                        System.out.println("Element popped = " + stack.pop().getData());
+                        System.out.print("Stack = ");
+                        stack.display();
+                    } catch (EmptyStackException ex) {
+                        System.out.println(ex);
+                    }
+                    break;
+
+                case 4:
+                    System.out.print("Checking if stack is empty: ");
+                    System.out.println(stack.isEmpty());
+                    break;
+
+                case 5:
+                    System.out.println("Displaying stack.");
+                    try {
+                        stack.display();
+                    } catch (EmptyStackException ex) {
+                        System.out.println(ex);
+                    }
+                    break;
+
+                default:
+                    System.out.println("That is not a valid operation.");
+                    break;
+            }
+
+            System.out.print("\nDo you wish to continue (Type y or n): ");
+            ch = reader.next().charAt(0);
+        } while(ch == 'y' || ch == 'Y');
     }
 }

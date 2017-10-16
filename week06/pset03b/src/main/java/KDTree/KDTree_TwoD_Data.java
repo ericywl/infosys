@@ -1,9 +1,9 @@
 package KDTree;
 //This is a java program to construct a KD tree for two dimensional static data
+
 import java.io.IOException;
 
-class KD2DNode
-{
+class KD2DNode {
     int axis;
     double[] x;
     int id;
@@ -14,8 +14,7 @@ class KD2DNode
     KD2DNode Left;
     KD2DNode Right;
 
-    public KD2DNode(double[] x0, int axis0)
-    {
+    public KD2DNode(double[] x0, int axis0) {
         x = new double[2];
         axis = axis0;
         for (int k = 0; k < 2; k++)
@@ -26,13 +25,11 @@ class KD2DNode
         id = 0;
     }
 
-    public KD2DNode FindParent(double[] x0)
-    {
+    public KD2DNode FindParent(double[] x0) {
         KD2DNode parent = null;
         KD2DNode next = this;
         int split;
-        while (next != null)
-        {
+        while (next != null) {
             split = next.axis;
             parent = next;
             if (x0[split] > next.x[split])
@@ -43,8 +40,7 @@ class KD2DNode
         return parent;
     }
 
-    public KD2DNode Insert(double[] p)
-    {
+    public KD2DNode Insert(double[] p) {
         x = new double[2];
         KD2DNode parent = FindParent(p);
         if (equal(p, parent.x, 2) == true)
@@ -54,12 +50,10 @@ class KD2DNode
                 parent.axis + 1 < 2 ? parent.axis + 1 : 0);
         newNode.Parent = parent;
 
-        if (p[parent.axis] > parent.x[parent.axis])
-        {
+        if (p[parent.axis] > parent.x[parent.axis]) {
             parent.Right = newNode;
             newNode.orientation = true; //
-        } else
-        {
+        } else {
             parent.Left = newNode;
             newNode.orientation = false; //
         }
@@ -67,10 +61,8 @@ class KD2DNode
         return newNode;
     }
 
-    boolean equal(double[] x1, double[] x2, int dim)
-    {
-        for (int k = 0; k < dim; k++)
-        {
+    boolean equal(double[] x1, double[] x2, int dim) {
+        for (int k = 0; k < dim; k++) {
             if (x1[k] != x2[k])
                 return false;
         }
@@ -78,8 +70,7 @@ class KD2DNode
         return true;
     }
 
-    double distance2(double[] x1, double[] x2, int dim)
-    {
+    double distance2(double[] x1, double[] x2, int dim) {
         double S = 0;
         for (int k = 0; k < dim; k++)
             S += (x1[k] - x2[k]) * (x1[k] - x2[k]);
@@ -87,8 +78,7 @@ class KD2DNode
     }
 }
 
-class KD2DTree
-{
+class KD2DTree {
     KD2DNode Root;
 
     int TimeStart, TimeFinish;
@@ -109,8 +99,7 @@ class KD2DTree
     boolean max_boundary[], min_boundary[];
     int n_boundary;
 
-    public KD2DTree(int i)
-    {
+    public KD2DTree(int i) {
         Root = null;
         KD_id = 1;
         nList = 0;
@@ -122,21 +111,17 @@ class KD2DTree
         x_max = new double[2];
     }
 
-    public boolean add(double[] x)
-    {
+    public boolean add(double[] x) {
         if (nList >= 2000000 - 1)
             return false; // can't add more points
 
-        if (Root == null)
-        {
+        if (Root == null) {
             Root = new KD2DNode(x, 0);
             Root.id = KD_id++;
             List[nList++] = Root;
-        } else
-        {
+        } else {
             KD2DNode pNode;
-            if ((pNode = Root.Insert(x)) != null)
-            {
+            if ((pNode = Root.Insert(x)) != null) {
                 pNode.id = KD_id++;
                 List[nList++] = pNode;
             }
@@ -145,8 +130,7 @@ class KD2DTree
         return true;
     }
 
-    public KD2DNode find_nearest(double[] x)
-    {
+    public KD2DNode find_nearest(double[] x) {
         if (Root == null)
             return null;
 
@@ -165,8 +149,7 @@ class KD2DTree
         return nearest_neighbour;
     }
 
-    public void check_subtree(KD2DNode node, double[] x)
-    {
+    public void check_subtree(KD2DNode node, double[] x) {
         if ((node == null) || node.checked)
             return;
 
@@ -177,50 +160,40 @@ class KD2DTree
         int dim = node.axis;
         double d = node.x[dim] - x[dim];
 
-        if (d * d > d_min)
-        {
+        if (d * d > d_min) {
             if (node.x[dim] > x[dim])
                 check_subtree(node.Left, x);
             else
                 check_subtree(node.Right, x);
-        } else
-        {
+        } else {
             check_subtree(node.Left, x);
             check_subtree(node.Right, x);
         }
     }
 
-    public void set_bounding_cube(KD2DNode node, double[] x)
-    {
+    public void set_bounding_cube(KD2DNode node, double[] x) {
         if (node == null)
             return;
         int d = 0;
         double dx;
-        for (int k = 0; k < 2; k++)
-        {
+        for (int k = 0; k < 2; k++) {
             dx = node.x[k] - x[k];
-            if (dx > 0)
-            {
+            if (dx > 0) {
                 dx *= dx;
-                if (!max_boundary[k])
-                {
+                if (!max_boundary[k]) {
                     if (dx > x_max[k])
                         x_max[k] = dx;
-                    if (x_max[k] > d_min)
-                    {
+                    if (x_max[k] > d_min) {
                         max_boundary[k] = true;
                         n_boundary++;
                     }
                 }
-            } else
-            {
+            } else {
                 dx *= dx;
-                if (!min_boundary[k])
-                {
+                if (!min_boundary[k]) {
                     if (dx > x_min[k])
                         x_min[k] = dx;
-                    if (x_min[k] > d_min)
-                    {
+                    if (x_min[k] > d_min) {
                         min_boundary[k] = true;
                         n_boundary++;
                     }
@@ -232,25 +205,21 @@ class KD2DTree
 
         }
 
-        if (d < d_min)
-        {
+        if (d < d_min) {
             d_min = d;
             nearest_neighbour = node;
         }
     }
 
-    public KD2DNode search_parent(KD2DNode parent, double[] x)
-    {
-        for (int k = 0; k < 2; k++)
-        {
+    public KD2DNode search_parent(KD2DNode parent, double[] x) {
+        for (int k = 0; k < 2; k++) {
             x_min[k] = x_max[k] = 0;
             max_boundary[k] = min_boundary[k] = false; //
         }
         n_boundary = 0;
 
         KD2DNode search_root = parent;
-        while (parent != null && (n_boundary != 2 * 2))
-        {
+        while (parent != null && (n_boundary != 2 * 2)) {
             check_subtree(parent, x);
             search_root = parent;
             parent = parent.Parent;
@@ -259,51 +228,41 @@ class KD2DTree
         return search_root;
     }
 
-    public void uncheck()
-    {
+    public void uncheck() {
         for (int n = 0; n < checked_nodes; n++)
             CheckedNodes[n].checked = false;
     }
 
-    public void inorder()
-    {
+    public void inorder() {
         inorder(Root);
     }
 
-    private void inorder(KD2DNode root)
-    {
-        if (root != null)
-        {
+    private void inorder(KD2DNode root) {
+        if (root != null) {
             inorder(root.Left);
             System.out.print("(" + root.x[0] + ", " + root.x[1] + ")  ");
             inorder(root.Right);
         }
     }
 
-    public void preorder()
-    {
+    public void preorder() {
         preorder(Root);
     }
 
-    private void preorder(KD2DNode root)
-    {
-        if (root != null)
-        {
+    private void preorder(KD2DNode root) {
+        if (root != null) {
             System.out.print("(" + root.x[0] + ", " + root.x[1] + ")  ");
             inorder(root.Left);
             inorder(root.Right);
         }
     }
 
-    public void postorder()
-    {
+    public void postorder() {
         postorder(Root);
     }
 
-    private void postorder(KD2DNode root)
-    {
-        if (root != null)
-        {
+    private void postorder(KD2DNode root) {
+        if (root != null) {
             inorder(root.Left);
             inorder(root.Right);
             System.out.print("(" + root.x[0] + ", " + root.x[1] + ")  ");
@@ -311,10 +270,8 @@ class KD2DTree
     }
 }
 
-public class KDTree_TwoD_Data
-{
-    public static void main(String args[]) throws IOException
-    {
+public class KDTree_TwoD_Data {
+    public static void main(String args[]) throws IOException {
         int numpoints = 5;
 
         KD2DTree kdt = new KD2DTree(numpoints);
