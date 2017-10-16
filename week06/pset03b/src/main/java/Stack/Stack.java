@@ -53,7 +53,7 @@ public class Stack {
 
     public Node pop() throws EmptyStackException {
         if (isEmpty()) {
-            throw new EmptyStackException("Stack is empty");
+            throw new EmptyStackException("Stack is empty.");
         }
 
         Node n = top;
@@ -64,7 +64,7 @@ public class Stack {
 
     public int peek() throws EmptyStackException {
         if (isEmpty()) {
-            throw new EmptyStackException("Stack is empty");
+            throw new EmptyStackException("Stack is empty.");
         }
 
         return top.getData();
@@ -76,7 +76,7 @@ public class Stack {
 
     public void display() throws EmptyStackException {
         if (isEmpty()) {
-            throw new EmptyStackException("Stack is empty");
+            throw new EmptyStackException("Stack is empty.");
         }
 
         Node temp = top;
@@ -124,18 +124,18 @@ public class Stack {
                     break;
 
                 case 2:
-                    System.out.println("Peeking top element.");
+                    System.out.println("Peeking top element...");
                     try {
-                        System.out.println("Element = " + stack.peek());
+                        System.out.println("Element: " + stack.peek());
                     } catch (EmptyStackException ex) {
                         System.out.println(ex);
                     }
                     break;
 
                 case 3:
-                    System.out.println("Popping top element.");
+                    System.out.println("Popping top element...");
                     try {
-                        System.out.println("Element popped = " + stack.pop().getData());
+                        System.out.println("Element popped: " + stack.pop().getData());
                         System.out.print("Stack = ");
                         stack.display();
                     } catch (EmptyStackException ex) {
@@ -149,7 +149,7 @@ public class Stack {
                     break;
 
                 case 5:
-                    System.out.println("Displaying stack.");
+                    System.out.println("Displaying stack...");
                     try {
                         stack.display();
                     } catch (EmptyStackException ex) {
