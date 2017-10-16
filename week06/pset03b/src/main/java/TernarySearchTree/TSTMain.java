@@ -7,18 +7,26 @@ public class TSTMain {
 
         int[] num = {100, 200, 590, 70, 80, 360, 110};
 
-        TernarySearchTree b = new TernarySearchTree();
+        TernarySearchTree t = new TernarySearchTree();
 
         for (int i : num) {
-            b.insert(i);
+            t.insert(i);
         }
 
         System.out.println("\nPreOrder Traversal: ");
-        b.preOrder(b.root);
+        t.preOrder(t.root);
         System.out.println("\nInOrder Traversal: ");
-        b.inOrder(b.root);
+        t.inOrder(t.root);
         System.out.println("\nPostOrder Traversal: ");
-        b.postOrder(b.root);
+        t.postOrder(t.root);
+
+        System.out.println("\n");
+        System.out.println(t.search(110));
+        System.out.println(t.search(20));
+
+        System.out.println("");
+        System.out.println(t.findMin());
+        System.out.println(t.findMax());
     }
 }
 
