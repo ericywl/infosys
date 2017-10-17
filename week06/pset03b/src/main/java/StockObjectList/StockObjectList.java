@@ -1,6 +1,8 @@
 package StockObjectList;
 
 
+import java.util.Scanner;
+
 public class StockObjectList {
     private StockObject start;
     private StockObject end;
@@ -79,7 +81,7 @@ public class StockObjectList {
     }
 
     public void dumpObjects() {
-        if (size == 0) {
+        if (isEmpty()) {
             System.out.println("Empty");
             return;
         }
@@ -91,7 +93,7 @@ public class StockObjectList {
             temp = temp.getNext();
         }
 
-        System.out.println(end.getStr());
+        System.out.println(end.getStr() + " Header: " + end.getLength());
     }
 
     public boolean isEmpty() {
@@ -99,16 +101,54 @@ public class StockObjectList {
     }
 
     public static void main(String[] args) {
+        Scanner reader = new Scanner(System.in);
         StockObjectList sol = new StockObjectList();
-        sol.enterObject("Spanner 6 Inch");
-        sol.enterObject("D");
-        sol.enterObject("Screw Driver");
-        sol.enterObject("McDonalds");
-        sol.enterObject("James");
-        sol.enterObject("Blablabla");
+        char ch;
+        System.out.println("StockObjectList Test");
 
-        sol.dumpObjects();
+        do {
+            System.out.println("\nStockObjectList Operations\n");
+            System.out.println("1. enterObject");
+            System.out.println("2. displayObject");
+            System.out.println("3. dumpObjects");
+            System.out.println("4. isEmpty");
 
-        sol.displayObject(5);
+            System.out.print("Enter the operation code: ");
+            int choice = reader.nextInt();
+            reader.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter string element to insert: ");
+                    String data = reader.nextLine();
+                    sol.enterObject(data);
+                    break;
+
+                case 2:
+                    System.out.print("Enter position of element to be displayed: ");
+                    int pos = reader.nextInt();
+                    System.out.print("Element: ");
+                    sol.displayObject(pos);
+                    break;
+
+                case 3:
+                    System.out.println("Dumping objects...");
+                    sol.dumpObjects();
+                    break;
+
+                case 4:
+                    System.out.println("Checking if list is empty...");
+                    System.out.println(sol.isEmpty());
+                    break;
+
+                default:
+                    System.out.println("That is not a valid operation.");
+                    break;
+            }
+
+            System.out.print("\nDo you wish to continue (Type y or n): ");
+            ch = reader.next().charAt(0);
+        } while (ch == 'y' || ch == 'Y');
+
     }
 }
