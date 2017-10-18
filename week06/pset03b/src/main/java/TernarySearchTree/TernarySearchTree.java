@@ -20,14 +20,8 @@ public class TernarySearchTree {
         while (true) {
             parent = current;
 
-            if (data > current.val1 && current.val2 == -1) {
-                current.val2 = data;
-                return;
-            }
-
-            if (data < current.val1 && current.val2 == -1) {
-                current.val2 = current.val1;
-                current.val1 = data;
+            if (current.val2 == -1) {
+                current.nodeInsert(data);
                 return;
             }
 
@@ -142,22 +136,29 @@ public class TernarySearchTree {
 }
 
 class Node {
-    int val1 = -1;
+    int val1;
     int val2 = -1;
     Node left;
     Node right;
     Node middle;
 
     public Node(int data) {
-        if (val1 == -1) {
-            val1 = data;
-        } else {
-            val2 = data;
-        }
-
+        val1 = data;
         left = null;
         middle = null;
         right = null;
+    }
+
+    public void nodeInsert(int data) {
+        if (data > this.val1) {
+            this.val2 = data;
+            return;
+        }
+
+        if (data < this.val1) {
+            this.val2 = this.val1;
+            this.val1 = data;
+        }
     }
 }
 
