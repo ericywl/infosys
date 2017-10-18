@@ -5,7 +5,7 @@ public class TSTMain {
         // String S = "the quick brown fox jumps over the lazy dog";
         // String S = "SUTD ISTD ASD ESD EPD";
 
-        int[] num = {100, 200, 590, 70, 80, 360, 110};
+        int[] num = {100, 200, 590, 70, 80, 360, 110, 105, 102, 107};
 
         TernarySearchTree t = new TernarySearchTree();
 
@@ -21,7 +21,7 @@ public class TSTMain {
         t.postOrder(t.root);
 
         System.out.println("\n");
-        System.out.println(t.search(110));
+        System.out.println(t.search(100));
         System.out.println(t.search(20));
 
         System.out.println("");

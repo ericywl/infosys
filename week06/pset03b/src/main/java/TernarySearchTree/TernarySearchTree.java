@@ -45,24 +45,27 @@ public class TernarySearchTree {
         }
     }
 
-    public boolean search(int x) {
+    public int search(int x) {
         Node temp = root;
+        int depth = 0;
 
         while (true) {
             if (x < temp.data) {
                 temp = temp.left;
+                depth++;
                 if (temp == null) {
-                    return false;
+                    return -1;
                 }
 
             } else if (x > temp.data) {
                 temp = temp.right;
+                depth++;
                 if (temp == null) {
-                    return false;
+                    return -1;
                 }
 
             } else {
-                return true;
+                return depth;
             }
         }
     }

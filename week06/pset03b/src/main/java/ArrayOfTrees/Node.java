@@ -57,6 +57,7 @@ class Node {
 
     @Override
     public boolean equals(Object o) {
+        // check if object is null or if object's class is not the same
         if (o == null) {
             return false;
         }
@@ -67,6 +68,7 @@ class Node {
 
         Node compared = (Node) o;
 
+        // check if their data are not equal or if this.data is null
         if (!getData().equals(compared.getData()) || this.getData() == null) {
             return false;
         }
