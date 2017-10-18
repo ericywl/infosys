@@ -36,6 +36,6 @@ public class ArrayOfTrees {
 
     public static void main(String[] args) {
         ArrayOfTrees arrayOfTrees = new ArrayOfTrees();
-        arrayOfTrees.put(INPUT_EX2);
+        arrayOfTrees.put(INPUT_EX1);
     }
 }
