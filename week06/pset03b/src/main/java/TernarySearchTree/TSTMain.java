@@ -22,7 +22,7 @@ public class TSTMain {
 
         System.out.println("\n");
         System.out.println(t.search(100));
-        System.out.println(t.search(20));
+        System.out.println(t.search(590));
 
         System.out.println("");
         System.out.println(t.findMin());
