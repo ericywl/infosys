@@ -1,1 +1,1 @@
-include ':app', ':pset03b'
+include ':app', ':pset03b', ':pset03c'
