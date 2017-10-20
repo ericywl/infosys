@@ -11,26 +11,28 @@ import java.util.regex.Pattern;
  * Calculator lexical analyzer.
  */
 public class Lexer {
-    private static final String PLUS = "(\\+)", MINUS = "(-)", TIMES = "(\\*)", DIVIDE = "(/)";
-
-    private static final Map<String, Type> OP_MAP = new HashMap<>();
+    private static final Map<String, Type> TYPE_MAP = new HashMap<>();
     static {
-        OP_MAP.put("+", Type.PLUS);
-        OP_MAP.put("-", Type.MINUS);
-        OP_MAP.put("*", Type.TIMES);
-        OP_MAP.put("/", Type.DIVIDE);
+        TYPE_MAP.put(Type.PLUS.getS(), Type.PLUS);
+        TYPE_MAP.put(Type.MINUS.getS(), Type.MINUS);
+        TYPE_MAP.put(Type.TIMES.getS(), Type.TIMES);
+        TYPE_MAP.put(Type.DIVIDE.getS(), Type.DIVIDE);
+        TYPE_MAP.put(Type.L_PAREN.getS(), Type.L_PAREN);
+        TYPE_MAP.put(Type.R_PAREN.getS(), Type.R_PAREN);
+        TYPE_MAP.put(Type.INCH.getS(), Type.INCH);
+        TYPE_MAP.put(Type.POINT.getS(), Type.POINT);
     }
 
     private static final Pattern NUMBER_PATTERN = Pattern.compile("(\\d+(\\.\\d+)?)");
-    private static final Pattern OP_PATTERN =
-            Pattern.compile(PLUS +
-                    "|" + MINUS +
-                    "|" + TIMES +
-                    "|" + DIVIDE);
+    private static final Pattern PARENS_PATTERN = Pattern.compile("((\\Q(\\E)|(\\Q)\\E))");
+    private static final Pattern UNITS_PATTERN = Pattern.compile("(in)|(pt)");
+    private static final Pattern OP_PATTERN = Pattern.compile("(\\+)|(-)|(\\*)|(/)");
 
     private static final Pattern CALC =
             Pattern.compile(NUMBER_PATTERN.toString() +
-                    "|" + OP_PATTERN.toString());
+                    "|" + OP_PATTERN.toString() +
+                    "|" + PARENS_PATTERN.toString() +
+                    "|" + UNITS_PATTERN.toString());
 
     private List<Token> tokens = new ArrayList<>();
 
@@ -61,20 +63,39 @@ public class Lexer {
 	}
 
 	// TODO write method spec
-	public Lexer(String input) {
+	public Lexer(String input) throws TokenMismatchException {
         Matcher matcher = CALC.matcher(input);
+        int nextStart;
+        int end = 0;
+
         while (matcher.find()) {
-            tokens.add(checkType(matcher.group()));
+            tokens.add(getToken(matcher.group()));
+            nextStart = matcher.start();
+            if (nextStart != end) {
+                throw new TokenMismatchException();
+            }
+
+            end = matcher.end();
         }
     }
 
-    private Token checkType(String s) {
-        if (s.matches(OP_PATTERN.toString())) return new Token(OP_MAP.get(s), s);
-        if (s.matches(NUMBER_PATTERN.toString())) return new Token(Type.NUMBER, s);
-        return new Token(null, null);
+    private Token getToken(String s) {
+        if (TYPE_MAP.get(s) != null) {
+            return new Token(TYPE_MAP.get(s), s);
+        }
+
+        return new Token(Type.NUMBER, s);
     }
 
     public static void main(String[] args) {
-        Lexer lexer = new Lexer("3+2");
+        try {
+            Lexer lexer = new Lexer("(3)+2");
+            for (Token token : lexer.tokens) {
+                System.out.println(token);
+            }
+
+        } catch (TokenMismatchException ex) {
+            System.out.println("SHIT!");
+        }
     }
 }

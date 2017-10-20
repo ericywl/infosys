@@ -16,7 +16,7 @@ public class MultiUnitCalculator {
 	 * @return the value of the expression, as a number possibly followed by
 	 *         units, e.g. "72pt", "3", or "4.882in"
 	 */
-	public String evaluate(String expression) {
+	public String evaluate(String expression) throws Lexer.TokenMismatchException {
 		Lexer lexer = new Lexer(expression);
 		Parser parser = new Parser(lexer);
 		return parser.evaluate().toString();
@@ -46,9 +46,13 @@ public class MultiUnitCalculator {
 
 			// evaluate
 			calculator = new MultiUnitCalculator();
-			result = calculator.evaluate(expression);
-			// display result
-			System.out.println(result);
+            try {
+                result = calculator.evaluate(expression);
+                // display result
+                System.out.println(result);
+            } catch (Lexer.TokenMismatchException ex) {
+                System.out.println("SHIT!");
+            }
 		}
 	}
 }
