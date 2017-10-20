@@ -21,12 +21,9 @@ public class TSTMain {
         t.postOrder(t.root);
 
         System.out.println("\n");
-        System.out.println(t.search(100));
-        System.out.println(t.search(590));
-
-        System.out.println("");
-        System.out.println(t.findMin());
-        System.out.println(t.findMax());
+        System.out.println(t.search(t.root, 107, 6));
+        System.out.println(t.findMax(t.root));
+        System.out.println(t.findMin(t.root));
     }
 }
 

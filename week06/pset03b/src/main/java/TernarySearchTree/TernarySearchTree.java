@@ -49,38 +49,36 @@ public class TernarySearchTree {
         }
     }
 
-    public int search(int x) {
+    public int search(Node root, int x, int depthOfRoot) {
         Node temp = root;
         int depth = 0;
 
-        while (true) {
+        for (int i = 0; i < depthOfRoot; i++) {
+            if (x == temp.val1 || x == temp.val2) {
+                return depth;
+            }
+
             if (x < temp.val1) {
                 temp = temp.left;
                 depth++;
-                if (temp == null) {
-                    return -1;
-                }
+                if (temp == null) return -1;
 
             } else if (x > temp.val1 && x < temp.val2) {
                 temp = temp.middle;
                 depth++;
-                if (temp == null) {
-                    return -1;
-                }
+                if (temp == null) return -1;
 
-            } else if (x > temp.val2){
+            } else if (x > temp.val2) {
                 temp = temp.right;
                 depth++;
-                if (temp == null) {
-                    return -1;
-                }
-            } else {
-                return depth;
+                if (temp == null) return -1;
             }
         }
+
+        return -1;
     }
 
-    public int findMin() {
+    public int findMin(Node root) {
         Node temp = root;
 
         while (true) {
@@ -92,7 +90,7 @@ public class TernarySearchTree {
         }
     }
 
-    public int findMax() {
+    public int findMax(Node root) {
         Node temp = root;
 
         while (true) {
