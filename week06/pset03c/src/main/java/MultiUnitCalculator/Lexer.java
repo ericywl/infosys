@@ -1,7 +1,7 @@
 package MultiUnitCalculator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -38,12 +38,12 @@ public class Lexer {
                     "|" + UNITS_PATTERN.toString());
 
     // list to store Tokens
-    private List<Token> tokenList = new ArrayList<>();
+    private List<Token> tokenList = new LinkedList<>();
 
 	/**
 	 * Token in the stream.
 	 */
-	private static class Token {
+	static class Token {
 		final Type type;
 		final String text;
 
@@ -64,6 +64,9 @@ public class Lexer {
 
 	@SuppressWarnings("serial")
 	static class TokenMismatchException extends Exception {
+        TokenMismatchException(String message) {
+            super(message);
+        }
 	}
 
 	/**
@@ -75,7 +78,7 @@ public class Lexer {
      * so throw TokenMismatchException.
 	 */
 	public Lexer(String input) throws TokenMismatchException {
-        Matcher matcher = CALC.matcher(input.replaceAll(" ", ""));
+        Matcher matcher = CALC.matcher(input.trim().replaceAll(" ", ""));
         int nextStart;
         int end = 0;
 
@@ -83,7 +86,7 @@ public class Lexer {
             tokenList.add(getToken(matcher.group()));
             nextStart = matcher.start();
             if (nextStart != end) {
-                throw new TokenMismatchException();
+                throw new TokenMismatchException("Unsupported token: " + input.charAt(end));
             }
 
             end = matcher.end();
@@ -112,7 +115,7 @@ public class Lexer {
 
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("(3) +2");
+            Lexer lexer = new Lexer("(3.5+2)in");
             for (Token token : lexer.getTokenList()) {
                 System.out.println(token);
             }
