@@ -50,8 +50,8 @@ public class MultiUnitCalculator {
                 result = calculator.evaluate(expression);
                 // display result
                 System.out.println(result);
-            } catch (Lexer.TokenMismatchException ex) {
-                System.out.println("SHIT!");
+            } catch (Lexer.TokenMismatchException | Parser.ParserException ex) {
+                System.out.println(ex);
             }
 		}
 	}

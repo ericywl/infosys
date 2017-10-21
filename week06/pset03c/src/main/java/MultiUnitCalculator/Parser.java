@@ -111,7 +111,7 @@ class Parser {
             return convert(arg, unit);
         }
 
-        throw new ParserException("Unknown term: " + head.type);
+        throw new ParserException("\nUnknown term: " + head.type);
     }
 
     private Value argument() {
@@ -122,7 +122,7 @@ class Parser {
             return arg;
         }
 
-        throw new ParserException("Unknown argument: " + head.type);
+        throw new ParserException("\nUnknown argument: " + head.type);
     }
 
     private ValueType units() {
@@ -164,22 +164,23 @@ class Parser {
             return output;
         }
 
-        throw new ParserException("Unknown operator: " + head.type);
+        throw new ParserException("\nUnknown operator: " + head.type);
     }
 
     private Value operate(Value val1, Value val2, Type operation)
             throws ArithmeticException, ParserException {
-        Value val2_temp = convert(val2, val1.type);
-        ValueType resultType = val1.type;
+        ValueType resultType = decideType(val1.type, val2.type, operation);
+        Value val1_temp = convert(val1, resultType);
+        Value val2_temp = convert(val2, resultType);
         double resultValue = 0;
 
         switch (operation) {
             case PLUS:
-                resultValue = val1.value + val2_temp.value;
+                resultValue = val1_temp.value + val2_temp.value;
                 break;
 
             case MINUS:
-                resultValue = val1.value - val2_temp.value;
+                resultValue = val1_temp.value - val2_temp.value;
                 break;
 
             case TIMES:
@@ -188,17 +189,40 @@ class Parser {
 
             case DIVIDE:
                 if (val2_temp.value == 0) {
-                    throw new ArithmeticException("Cannot divide by zero.");
+                    throw new ArithmeticException("\nCannot divide by zero.");
                 }
 
-                resultValue = val1.value / val2.value;
+                if (val1.type != val2.type
+                        && val1.type != ValueType.SCALAR && val2.type != ValueType.SCALAR) {
+                    resultValue = val1_temp.value / val2_temp.value;
+                } else {
+                    resultValue = val1.value / val2.value;
+                }
                 break;
 
             default:
-                throw new ParserException("Unknown operation: " + operation);
+                throw new ParserException("\nUnknown operation: " + operation);
         }
 
         return new Value(resultValue, resultType);
+    }
+
+    private ValueType decideType(ValueType t1, ValueType t2, Type operation) {
+        if (operation == Type.DIVIDE) {
+            if (t1 == t2) {
+                return ValueType.SCALAR;
+            }
+
+            if (t1 != ValueType.SCALAR && t2 != ValueType.SCALAR) {
+                return ValueType.SCALAR;
+            }
+        }
+
+        if (t1 == ValueType.SCALAR) {
+            return t2;
+        }
+
+        return t1;
     }
 
     // TODO write method spec
@@ -208,19 +232,19 @@ class Parser {
         if (head.type == Type.NUMBER || head.type == Type.L_PAREN) {
             result = expression();
         } else {
-            throw new ParserException("Unknown evaluate: " + head.type);
+            throw new ParserException("\nUnknown evaluate: " + head.type);
         }
 
         if (tokenList.isEmpty()) {
             return result;
         }
 
-        throw new ParserException("Order not explicit.");
+        throw new ParserException("\nOrder not explicit.");
     }
 
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("(3pt + 2.4)in");
+            Lexer lexer = new Lexer("72in / 4in");
             Parser parser = new Parser(lexer);
             System.out.println(parser.evaluate().toString());
         } catch (Lexer.TokenMismatchException | ParserException ex) {

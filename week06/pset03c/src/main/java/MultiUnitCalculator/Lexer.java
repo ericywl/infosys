@@ -37,6 +37,9 @@ public class Lexer {
                     "|" + PARENS_PATTERN.toString() +
                     "|" + UNITS_PATTERN.toString());
 
+    // inverse CALC
+    private static final Pattern INV_CALC = Pattern.compile("[^" + CALC.toString() + "]");
+
     // list to store Tokens
     private List<Token> tokenList = new LinkedList<>();
 
@@ -78,18 +81,16 @@ public class Lexer {
      * so throw TokenMismatchException.
 	 */
 	public Lexer(String input) throws TokenMismatchException {
-        Matcher matcher = CALC.matcher(input.trim().replaceAll(" ", ""));
-        int nextStart;
-        int end = 0;
+        String input_temp = input.trim().replaceAll(" ", "");
+        Matcher matcher = CALC.matcher(input_temp);
+        Matcher invMatcher = INV_CALC.matcher(input_temp);
+
+        if (invMatcher.find()) {
+            throw new TokenMismatchException("\nUnsupported token: " + invMatcher.group());
+        }
 
         while (matcher.find()) {
             tokenList.add(getToken(matcher.group()));
-            nextStart = matcher.start();
-            if (nextStart != end) {
-                throw new TokenMismatchException("Unsupported token: " + input.charAt(end));
-            }
-
-            end = matcher.end();
         }
     }
 
@@ -115,13 +116,13 @@ public class Lexer {
 
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("(3.5+2)in");
+            Lexer lexer = new Lexer("6a");
             for (Token token : lexer.getTokenList()) {
                 System.out.println(token);
             }
 
         } catch (TokenMismatchException ex) {
-            System.out.println("SHIT!");
+            System.out.println(ex);
         }
     }
 }
