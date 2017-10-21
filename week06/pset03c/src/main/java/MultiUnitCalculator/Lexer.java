@@ -37,7 +37,7 @@ public class Lexer {
                     "|" + PARENS_PATTERN.toString() +
                     "|" + UNITS_PATTERN.toString());
 
-    // inverse CALC
+    // inverse CALC for detecting other tokens
     private static final Pattern INV_CALC = Pattern.compile("[^" + CALC.toString() + "]");
 
     // list to store Tokens
@@ -114,6 +114,7 @@ public class Lexer {
         return new Token(Type.NUMBER, s);
     }
 
+    // Test
     public static void main(String[] args) {
         try {
             Lexer lexer = new Lexer("6a");

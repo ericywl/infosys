@@ -1,7 +1,6 @@
 package MultiUnitCalculator;
 
 /*
- * TODO (optional) define your symbols and groups as comment here
  * SYMBOLS
  * numbers: \d+ | '.'
  * operators: + , -, *, /
@@ -11,7 +10,7 @@ package MultiUnitCalculator;
  * GROUPS
  * OPERATOR: '+' | '-' | '*' | '/'
  * NUMBER: \d+(\.\d+)?
- * UNIT: 'in' | 'pt'
+ * UNITS: 'in' | 'pt'
  * OPEN_PAREN: '('
  * CLOSE_PAREN: ')'
  */
@@ -22,14 +21,14 @@ package MultiUnitCalculator;
 enum Type {
 	L_PAREN("("),   // (
 	R_PAREN(")"),   // )
-	NUMBER(""),	    // 1, 2, 3, 4...
 	INCH("in"),     // in
 	POINT("pt"),    // pt
 	PLUS("+"),		// +
 	MINUS("-"),		// -
 	TIMES("*"),		// *
 	DIVIDE("/"),    // /
-    EPSILON("");
+    NUMBER(""),	    // 1, 2, 3, 4...
+    EPSILON("");    // end of input
 
     private String s;
 
