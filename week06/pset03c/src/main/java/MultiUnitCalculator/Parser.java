@@ -184,7 +184,12 @@ class Parser {
                 break;
 
             case TIMES:
-                resultValue = val1.value * val2.value;
+                if (val1.type != val2.type
+                        && val1.type != ValueType.SCALAR && val2.type != ValueType.SCALAR) {
+                    resultValue = val1_temp.value * val2_temp.value;
+                } else {
+                    resultValue = val1.value * val2.value;
+                }
                 break;
 
             case DIVIDE:
