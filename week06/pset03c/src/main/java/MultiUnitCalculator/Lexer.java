@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public class Lexer {
     // map for accessing TYPEs
     private static final Map<String, Type> TYPE_MAP = new HashMap<>();
+
     static {
         TYPE_MAP.put(Type.PLUS.getS(), Type.PLUS);
         TYPE_MAP.put(Type.MINUS.getS(), Type.MINUS);
@@ -40,41 +41,41 @@ public class Lexer {
     // list to store Tokens
     private List<Token> tokenList = new ArrayList<>();
 
-	/**
-	 * Token in the stream.
-	 */
-	private static class Token {
-		final Type type;
-		final String text;
+    /**
+     * Token in the stream.
+     */
+    private static class Token {
+        final Type type;
+        final String text;
 
-		Token(Type type, String text) {
-			this.type = type;
-			this.text = text;
-		}
+        Token(Type type, String text) {
+            this.type = type;
+            this.text = text;
+        }
 
-		Token(Type type) {
-			this(type, null);
-		}
+        Token(Type type) {
+            this(type, null);
+        }
 
-		@Override
-		public String toString() {
+        @Override
+        public String toString() {
             return text + " " + type.toString();
         }
- 	}
+    }
 
-	@SuppressWarnings("serial")
-	static class TokenMismatchException extends Exception {
-	}
+    @SuppressWarnings("serial")
+    static class TokenMismatchException extends Exception {
+    }
 
-	/**
-	 * Use regex for lexical analysis to keep finding matches in the input
+    /**
+     * Use regex for lexical analysis to keep finding matches in the input
      * and add them to tokenList.
      * If the start of the next match is not in the same position as the end of the previous match,
      * (ie. 3.2a+b : the index of 3.2 is 0:3 and + is index 4)
      * something else not recognized by the matcher is in between,
      * so throw TokenMismatchException.
-	 */
-	public Lexer(String input) throws TokenMismatchException {
+     */
+    public Lexer(String input) throws TokenMismatchException {
         Matcher matcher = CALC.matcher(input.replaceAll(" ", ""));
         int nextStart;
         int end = 0;

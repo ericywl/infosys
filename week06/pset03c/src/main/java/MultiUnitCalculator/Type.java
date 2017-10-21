@@ -13,23 +13,23 @@ package MultiUnitCalculator;
  * Token type.
  */
 enum Type {
-	L_PAREN("("),	// (
-	R_PAREN(")"),	// )
-	NUMBER(""),		// 1, 2, 3, 4...
-	INCH("in"),       // in
-	POINT("pt"),      // pt
-	PLUS("+"),		// +
-	MINUS("-"),		// -
-	TIMES("*"),		// *
-	DIVIDE("/");		// /
+    L_PAREN("("),    // (
+    R_PAREN(")"),    // )
+    NUMBER(""),      // 1, 2, 3, 4...
+    INCH("in"),      // in
+    POINT("pt"),     // pt
+    PLUS("+"),       // +
+    MINUS("-"),      // -
+    TIMES("*"),      // *
+    DIVIDE("/");     // /
 
     private String s;
 
-	Type(String s) {
-		this.s = s;
-	}
-	
-	String getS() {
+    Type(String s) {
+        this.s = s;
+    }
+
+    String getS() {
         return this.s;
     }
 }
