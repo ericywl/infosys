@@ -143,11 +143,12 @@ class Parser {
 
     /**
      * If the term starts with a NUMBER, parse the NUMBER and possibly UNITS.
-     * If the units is INCHES, multiply by PT_PER_IN because values are stored as POINTS.
      *
      * If the term starts with a L_PAREN, parse the argument and possible trailing UNITS.
      * When parsing the trailing units, check if the argument is a SCALAR.
      * This is because (2 + 3)in should be 5in.
+     *
+     * If the units is INCHES, multiply by PT_PER_IN because values are stored as POINTS.
      *
      * @return NUMBER (UNITS)? or argument (UNITS)?
      * @throws ParserException
