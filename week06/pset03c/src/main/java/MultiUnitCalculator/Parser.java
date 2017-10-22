@@ -282,10 +282,18 @@ class Parser {
                 break;
 
             case TIMES:
-                resultValue = val1.value * val2.value;
-                if (resultType == ValueType.INCHES) {
+                if (val1.type != val2.type
+                        && val1.type != ValueType.SCALAR && val2.type != ValueType.SCALAR) {
+                    resultValue = val1.value * val2.value;
+
+                } else {
+                    resultValue = val1.value * val2.value;
+                }
+
+                if (val1.type == val2.type && val1.type == ValueType.INCHES) {
                     resultValue /= PT_PER_IN;
                 }
+
                 break;
 
             case DIVIDE:
@@ -341,7 +349,7 @@ class Parser {
     // Test
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("2 2+ 5");
+            Lexer lexer = new Lexer("(3in*2.4)pt ");
             Parser parser = new Parser(lexer);
             System.out.println(parser.evaluate().toString());
         } catch (Lexer.TokenMismatchException | ParserException ex) {
