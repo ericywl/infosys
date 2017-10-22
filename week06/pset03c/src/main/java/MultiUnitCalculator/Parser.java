@@ -12,7 +12,7 @@ import MultiUnitCalculator.Lexer.Token;
 import java.util.LinkedList;
 
 /**
- * Calculator parser.
+ * Calculator parser. All values in POINTS.
  */
 class Parser {
     @SuppressWarnings("serial")
@@ -30,8 +30,8 @@ class Parser {
     }
 
     /**
-     * Internal value depends on the ValueType.
-     * ie. 2in is stored as value = 2, type = INCH
+     * Internal value is stored in POINTS.
+     * ie. 2in is stored as value = 144.0, type = INCH
      */
     public class Value {
         final double value;
@@ -44,15 +44,22 @@ class Parser {
 
         @Override
         public String toString() {
-            double temp_value = Math.round(value * 10000) / 10000.0;
+            final double div = 10000.0;
+            double val;
+            if (type == ValueType.INCHES) {
+                val = Math.round(value / PT_PER_IN * div) / div;
+            } else {
+                val = Math.round(value * div) / div;
+            }
+
 
             switch (type) {
                 case INCHES:
-                    return temp_value + " in";
+                    return val + " in";
                 case POINTS:
-                    return temp_value + " pt";
+                    return val + " pt";
                 default:
-                    return "" + temp_value;
+                    return "" + val;
             }
         }
     }
@@ -125,6 +132,10 @@ class Parser {
         }
 
         Type operation = operator();
+        if (operation == Type.R_PAREN) {
+            return term1;
+        }
+
         Value term2 = term();
 
         return operate(term1, term2, operation);
@@ -132,13 +143,11 @@ class Parser {
 
     /**
      * If the term starts with a NUMBER, parse the NUMBER and possibly UNITS.
+     * If the units is INCHES, multiply by PT_PER_IN because values are stored as POINTS.
      *
      * If the term starts with a L_PAREN, parse the argument and possible trailing UNITS.
      * When parsing the trailing units, check if the argument is a SCALAR.
      * This is because (2 + 3)in should be 5in.
-     *
-     * On the other hand, the convert() method would return 5/72in because it is more general
-     * and converts any unit to another.
      *
      * @return NUMBER (UNITS)? or argument (UNITS)?
      * @throws ParserException
@@ -150,6 +159,10 @@ class Parser {
             nextToken();
 
             ValueType unit = units();
+            if (unit == ValueType.INCHES) {
+                value *= PT_PER_IN;
+            }
+
             return new Value(value, unit);
         }
 
@@ -158,11 +171,15 @@ class Parser {
             nextToken();
 
             ValueType unit = units();
-            if (arg.type == ValueType.SCALAR && unit != ValueType.SCALAR) {
-                return new Value(arg.value, unit);
+            if (arg.type == ValueType.SCALAR && unit == ValueType.INCHES) {
+                return new Value(arg.value * PT_PER_IN, unit);
             }
 
-            return convert(arg, unit);
+            if (unit == ValueType.SCALAR) {
+                return arg;
+            }
+
+            return new Value(arg.value, unit);
         }
 
         throw new ParserException("\nUnknown term: " + head.type);
@@ -215,6 +232,8 @@ class Parser {
      *
      * @return OPERATOR
      * @throws ParserException
+     * Argument should contain expression: If a CLOSE_PAREN is detected before an OPERATOR, the
+     *                                     argument does not contain an expression but only a term.
      * Not operator: If it's not end, the first term should be followed by a supported operator.
      */
     private Type operator() throws ParserException {
@@ -223,6 +242,10 @@ class Parser {
             Type output = head.type;
             nextToken();
             return output;
+        }
+
+        if (head.type == Type.R_PAREN) {
+            throw new ParserException("\nArgument should contain expression.");
         }
 
         throw new ParserException("\nNot operator: " + head.type);
@@ -247,36 +270,32 @@ class Parser {
     private Value operate(Value val1, Value val2, Type operation)
             throws ArithmeticException, ParserException {
         ValueType resultType = decideType(val1.type, val2.type, operation);
-        Value val1_temp = convert(val1, resultType);
-        Value val2_temp = convert(val2, resultType);
         double resultValue = 0;
 
         switch (operation) {
             case PLUS:
-                resultValue = val1_temp.value + val2_temp.value;
+                resultValue = val1.value + val2.value;
                 break;
 
             case MINUS:
-                resultValue = val1_temp.value - val2_temp.value;
+                resultValue = val1.value - val2.value;
                 break;
 
             case TIMES:
-                if (val1.type != val2.type
-                        && val1.type != ValueType.SCALAR && val2.type != ValueType.SCALAR) {
-                    resultValue = val1_temp.value * val2_temp.value;
-                } else {
-                    resultValue = val1.value * val2.value;
+                resultValue = val1.value * val2.value;
+                if (resultType == ValueType.INCHES) {
+                    resultValue /= PT_PER_IN;
                 }
                 break;
 
             case DIVIDE:
-                if (val2_temp.value == 0) {
+                if (val2.value == 0) {
                     throw new ArithmeticException("\nCannot divide by zero.");
                 }
 
                 if (val1.type != val2.type
                         && val1.type != ValueType.SCALAR && val2.type != ValueType.SCALAR) {
-                    resultValue = val1_temp.value / val2_temp.value;
+                    resultValue = val1.value / val2.value;
                 } else {
                     resultValue = val1.value / val2.value;
                 }
@@ -319,33 +338,10 @@ class Parser {
         return t1;
     }
 
-    /**
-     * Mainly to convert to-and-fro INCHES.
-     *
-     * @param val: Value to be converted
-     * @param units: units that the val is converted to
-     * @return converted Value
-     */
-    private Value convert(Value val, ValueType units) {
-        if (val.type == units) {
-            return val;
-        }
-
-        if (units == ValueType.INCHES) {
-            return new Value(val.value / PT_PER_IN, units);
-        }
-
-        if (val.type == ValueType.INCHES) {
-            return new Value(val.value * PT_PER_IN, units);
-        }
-
-        return new Value(val.value, units);
-    }
-
     // Test
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("(6+2)pt");
+            Lexer lexer = new Lexer("2 2+ 5");
             Parser parser = new Parser(lexer);
             System.out.println(parser.evaluate().toString());
         } catch (Lexer.TokenMismatchException | ParserException ex) {
