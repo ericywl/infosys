@@ -108,10 +108,10 @@ public class Stack {
             System.out.println("5. displayStack");
 
             System.out.print("Enter the operation code: ");
-            int choice = reader.nextInt();
+            String choice = reader.next();
 
             switch(choice) {
-                case 1:
+                case "1":
                     System.out.print("Enter integer element to push: ");
                     int data = reader.nextInt();
                     stack.push(data);
@@ -123,7 +123,7 @@ public class Stack {
                     }
                     break;
 
-                case 2:
+                case "2":
                     System.out.println("Peeking top element...");
                     try {
                         System.out.println("Element: " + stack.peek());
@@ -132,7 +132,7 @@ public class Stack {
                     }
                     break;
 
-                case 3:
+                case "3":
                     System.out.println("Popping top element...");
                     try {
                         System.out.println("Element popped: " + stack.pop().getData());
@@ -143,12 +143,12 @@ public class Stack {
                     }
                     break;
 
-                case 4:
+                case "4":
                     System.out.print("Checking if stack is empty: ");
                     System.out.println(stack.isEmpty());
                     break;
 
-                case 5:
+                case "5":
                     System.out.println("Displaying stack...");
                     try {
                         stack.display();

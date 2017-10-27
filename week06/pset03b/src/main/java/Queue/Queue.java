@@ -96,20 +96,20 @@ public class Queue {
         Scanner reader = new Scanner(System.in);
         Queue queue = new Queue();
         char ch;
-        System.out.println("Stack Test");
+        System.out.println("Queue Test");
 
         do {
-            System.out.println("\nStack Operations\n");
+            System.out.println("\nQueue Operations\n");
             System.out.println("1. Enqueue");
             System.out.println("2. Dequeue");
             System.out.println("3. isEmpty");
             System.out.println("4. displayQueue");
 
             System.out.print("Enter the operation code: ");
-            int choice = reader.nextInt();
+            String choice = reader.next();
 
             switch(choice) {
-                case 1:
+                case "1":
                     System.out.print("Enter integer element to queue: ");
                     int data = reader.nextInt();
                     queue.enqueue(data);
@@ -121,22 +121,24 @@ public class Queue {
                     }
                     break;
 
-                case 2:
+                case "2":
                     System.out.println("Dequeuing...");
                     try {
-                        System.out.print("Item dequeued: " + queue.dequeue().getData());
+                        System.out.println("Item dequeued: " + queue.dequeue().getData());
+                        System.out.print("Queue = ");
+                        queue.display();
                     } catch (EmptyQueueException ex) {
                         System.out.println(ex);
                     }
                     break;
 
-                case 3:
+                case "3":
                     System.out.println("Checking if queue is empty...");
                     System.out.println(queue.isEmpty());
                     break;
 
-                case 4:
-                    System.out.println("Displaying stack...");
+                case "4":
+                    System.out.println("Displaying queue...");
                     try {
                         queue.display();
                     } catch (EmptyQueueException ex) {
