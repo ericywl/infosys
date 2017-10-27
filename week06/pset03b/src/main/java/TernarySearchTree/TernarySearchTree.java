@@ -53,7 +53,7 @@ public class TernarySearchTree {
         Node temp = root;
         int depth = 0;
 
-        for (int i = 0; i < depthOfRoot; i++) {
+        while (temp != null) {
             if (x == temp.val1 || x == temp.val2) {
                 return depth;
             }
@@ -75,7 +75,7 @@ public class TernarySearchTree {
             }
         }
 
-        return -1;
+        return depth;
     }
 
     public int findMin(Node root) {
