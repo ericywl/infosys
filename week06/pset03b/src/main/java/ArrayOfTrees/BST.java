@@ -32,17 +32,17 @@ public class BST {
                 return;
             }
 
-            // check if data's char ASCII is smaller than current's char ASCII
+            // check if data's char ASCII is smaller than current's char ASCII lexicographically
             // go into left child if smaller
-            if (data.compareTo(current.getData()) > 0) {
+            if (data.compareTo(current.getData()) < 0) {
                 current = current.getLeft();
                 if (current == null) {
                     parent.setLeft(newNode);
                     return;
                 }
 
-                // check if data's char ASCII is larger than current's char ASCII
-                // go into right child if larger
+            // check if data's char ASCII is larger than current's char ASCII lexicographically
+            // go into right child if larger
             } else if (data.compareTo(current.getData()) > 0) {
                 current = current.getRight();
                 if (current == null) {
