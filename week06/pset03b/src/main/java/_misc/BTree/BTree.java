@@ -1,4 +1,4 @@
-package BTree;
+package _misc.BTree;
 
 public class BTree<Key extends Comparable<Key>, Value>  {
     // max children per B-tree node = M-1

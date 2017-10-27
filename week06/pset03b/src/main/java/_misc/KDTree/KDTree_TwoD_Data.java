@@ -1,4 +1,4 @@
-package KDTree;
+package _misc.KDTree;
 //This is a java program to construct a KD tree for two dimensional static data
 
 import java.io.IOException;
