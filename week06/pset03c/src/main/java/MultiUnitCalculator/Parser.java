@@ -52,7 +52,6 @@ class Parser {
                 val = Math.round(value * div) / div;
             }
 
-
             switch (type) {
                 case INCHES:
                     return val + " in";
@@ -246,7 +245,7 @@ class Parser {
         }
 
         if (head.type == Type.R_PAREN) {
-            throw new ParserException("\nArgument should contain expression.");
+            return Type.R_PAREN;
         }
 
         throw new ParserException("\nNot operator: " + head.type);
@@ -294,7 +293,6 @@ class Parser {
                 if (val1.type == val2.type && val1.type == ValueType.INCHES) {
                     resultValue /= PT_PER_IN;
                 }
-
                 break;
 
             case DIVIDE:
@@ -350,7 +348,7 @@ class Parser {
     // Test
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("(3in*2.4)pt ");
+            Lexer lexer = new Lexer("(3in + 4)pt");
             Parser parser = new Parser(lexer);
             System.out.println(parser.evaluate().toString());
         } catch (Lexer.TokenMismatchException | ParserException ex) {
