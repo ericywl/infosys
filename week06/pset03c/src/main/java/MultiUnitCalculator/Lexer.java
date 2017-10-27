@@ -28,7 +28,7 @@ public class Lexer {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("(\\d+(\\.\\d+)?)");
     private static final Pattern PARENS_PATTERN = Pattern.compile("((\\Q(\\E)|(\\Q)\\E))");
     private static final Pattern UNITS_PATTERN = Pattern.compile("(in)|(pt)");
-    private static final Pattern OP_PATTERN = Pattern.compile("(\\+)|(-)|(\\*)|(/)");
+    private static final Pattern OP_PATTERN = Pattern.compile("(\\+)|(\\-)|(\\*)|(\\/)");
 
     // combination of the above
     private static final Pattern CALC =

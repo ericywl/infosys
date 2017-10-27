@@ -348,7 +348,7 @@ class Parser {
     // Test
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("(3in + 4)pt");
+            Lexer lexer = new Lexer("(2in*5)pt");
             Parser parser = new Parser(lexer);
             System.out.println(parser.evaluate().toString());
         } catch (Lexer.TokenMismatchException | ParserException ex) {
