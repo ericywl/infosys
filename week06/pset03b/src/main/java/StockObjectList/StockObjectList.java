@@ -22,6 +22,7 @@ public class StockObjectList {
             start = so;
             end = so;
             size++;
+
         } else {
             if (so.getLength() < start.getLength()) {
                 so.setNext(start);
@@ -56,24 +57,24 @@ public class StockObjectList {
     }
 
     public void displayObject(int pos) {
-        if (pos < 0 || pos > size - 1) {
+        if (pos < 1 || pos > size) {
             System.out.println("Invalid position");
             return;
         }
 
-        if (pos == 0) {
+        if (pos == 1) {
             System.out.println(start.getStr());
             return;
         }
 
-        if (pos == size - 1) {
+        if (pos == size) {
             System.out.println(end.getStr());
             return;
         }
 
         StockObject temp = start;
 
-        for (int i = 0; i < pos; i++) {
+        for (int i = 1; i < pos; i++) {
             temp = temp.getNext();
         }
 
@@ -103,7 +104,7 @@ public class StockObjectList {
     public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
         StockObjectList sol = new StockObjectList();
-        char ch;
+        boolean stop = false;
         System.out.println("StockObjectList Test");
 
         do {
@@ -112,43 +113,46 @@ public class StockObjectList {
             System.out.println("2. displayObject");
             System.out.println("3. dumpObjects");
             System.out.println("4. isEmpty");
+            System.out.println("q. quit");
 
             System.out.print("Enter the operation code: ");
-            int choice = reader.nextInt();
+            String choice = reader.next();
             reader.nextLine();
 
             switch (choice) {
-                case 1:
+                case "1":
                     System.out.print("Enter string element to insert: ");
                     String data = reader.nextLine();
                     sol.enterObject(data);
                     break;
 
-                case 2:
+                case "2":
                     System.out.print("Enter position of element to be displayed: ");
                     int pos = reader.nextInt();
                     System.out.print("Element: ");
                     sol.displayObject(pos);
                     break;
 
-                case 3:
+                case "3":
                     System.out.println("Dumping objects...");
                     sol.dumpObjects();
                     break;
 
-                case 4:
+                case "4":
                     System.out.println("Checking if list is empty...");
                     System.out.println(sol.isEmpty());
+                    break;
+
+                case "q":
+                    System.out.println("Quitting...");
+                    stop = true;
                     break;
 
                 default:
                     System.out.println("That is not a valid operation.");
                     break;
             }
-
-            System.out.print("\nDo you wish to continue (Type y or n): ");
-            ch = reader.next().charAt(0);
-        } while (ch == 'y' || ch == 'Y');
+        } while (!stop);
 
     }
 }
