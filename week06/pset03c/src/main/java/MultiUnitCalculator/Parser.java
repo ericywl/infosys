@@ -9,6 +9,7 @@ package MultiUnitCalculator;
 
 import MultiUnitCalculator.Lexer.Token;
 
+import java.rmi.server.ExportException;
 import java.util.LinkedList;
 
 /**
@@ -75,8 +76,12 @@ class Parser {
      * @param lexer: the tokenList that lexer carries is the one needed
      */
     Parser(Lexer lexer) {
-        this.tokenLinkedList = new LinkedList<Token>(lexer.getTokenList());
-        this.head = tokenLinkedList.getFirst();
+        try {
+            this.tokenLinkedList = new LinkedList<>(lexer.getTokenList());
+            this.head = tokenLinkedList.getFirst();
+        } catch (Exception ex) {
+            // do nothing
+        }
     }
 
     /**
@@ -96,11 +101,24 @@ class Parser {
      * If the list is not empty, the input has something else behind the expression.
      *
      * @return expression
-     * @throws ParserException
-     * Invalid starting symbol: Can only start with NUMBER or '('.
-     * Order not explicit: Can only have expression grammar.
+     * @throws ParserException Invalid starting symbol: Can only start with NUMBER or '('.
+     *                         Order not explicit: Can only have expression grammar.
      */
-    public Value evaluate() throws ParserException{
+    public Value evaluate() {
+        Value output = new Value(0, ValueType.POINTS);
+
+        try {
+            output = start();
+        } catch (ParserException ex) {
+            System.out.println(ex);
+        } catch (Exception ex) {
+            // do nothing
+        }
+
+        return output;
+    }
+
+    private Value start() throws ParserException {
         Value result;
 
         if (head.type == Type.NUMBER || head.type == Type.L_PAREN) {
@@ -119,7 +137,7 @@ class Parser {
     /**
      * If there's only 1 term, return it.
      * This is because my grammar has argument inside term, so it allows this.
-     *
+     * <p>
      * Else include the operator and another term.
      *
      * @return term (OPERATOR term)?
@@ -142,16 +160,15 @@ class Parser {
 
     /**
      * If the term starts with a NUMBER, parse the NUMBER and possibly UNITS.
-     *
+     * <p>
      * If the term starts with a L_PAREN, parse the argument and possible trailing UNITS.
      * When parsing the trailing units, check if the argument is a SCALAR.
      * This is because (2 + 3)in should be 5in.
-     *
+     * <p>
      * If the units is INCHES, multiply by PT_PER_IN because values are stored as POINTS.
      *
      * @return NUMBER (UNITS)? or argument (UNITS)?
-     * @throws ParserException
-     * Unknown term: Can only start with NUMBER or '('.
+     * @throws ParserException Unknown term: Can only start with NUMBER or '('.
      */
     private Value term() throws ParserException {
         if (head.type == Type.NUMBER) {
@@ -191,8 +208,7 @@ class Parser {
      * proceed to parse expression and only return it when the CLOSE_PAREN is found.
      *
      * @return OPEN_PAREN expression CLOSE_PAREN
-     * @throws ParserException
-     * Not closing parenthesis: The expression must be followed by a closing bracket.
+     * @throws ParserException Not closing parenthesis: The expression must be followed by a closing bracket.
      */
     private Value argument() throws ParserException {
         nextToken();
@@ -231,10 +247,9 @@ class Parser {
      * operator() method exists for convenience and makes the code look more organized.
      *
      * @return OPERATOR
-     * @throws ParserException
-     * Argument should contain expression: If a CLOSE_PAREN is detected before an OPERATOR, the
-     *                                     argument does not contain an expression but only a term.
-     * Not operator: If it's not end, the first term should be followed by a supported operator.
+     * @throws ParserException Argument should contain expression: If a CLOSE_PAREN is detected before an OPERATOR, the
+     *                         argument does not contain an expression but only a term.
+     *                         Not operator: If it's not end, the first term should be followed by a supported operator.
      */
     private Type operator() throws ParserException {
         if (head.type == Type.PLUS || head.type == Type.MINUS
@@ -256,16 +271,15 @@ class Parser {
      * Multiplication and division is slightly more special because of some requirements
      * ie. INCHES * INCHES = INCHES
      * ie. INCHES / INCHES = SCALAR
-     *
+     * <p>
      * The units are decided by decideType().
      *
-     * @param val1: first term
-     * @param val2: second term
+     * @param val1:      first term
+     * @param val2:      second term
      * @param operation: the operator in-between
      * @return result of expression
      * @throws ArithmeticException: Cannot divide by zero.
-     * @throws ParserException
-     * Unknown operation: execution should not reach this stage, but just in case...
+     * @throws ParserException      Unknown operation: execution should not reach this stage, but just in case...
      */
     private Value operate(Value val1, Value val2, Type operation)
             throws ArithmeticException, ParserException {
@@ -318,12 +332,12 @@ class Parser {
     /**
      * If operation == DIVIDE, check if both units are equal ie. INCHES / INCHES = SCALAR.
      * Also check if the units are POINTS and INCHES because that also returns SCALAR.
-     *
+     * <p>
      * If the units of first term is SCALAR, the units of second term is used
      * ie. SCALAR / INCHES = INCHES
      *
-     * @param t1: type of first term
-     * @param t2: type of second term
+     * @param t1:        type of first term
+     * @param t2:        type of second term
      * @param operation: to check if it's DIVIDE
      * @return units for the whole expression
      */
@@ -347,12 +361,8 @@ class Parser {
 
     // Test
     public static void main(String[] args) {
-        try {
-            Lexer lexer = new Lexer("(2in*5)pt");
-            Parser parser = new Parser(lexer);
-            System.out.println(parser.evaluate().toString());
-        } catch (Lexer.TokenMismatchException | ParserException ex) {
-            System.out.println(ex);
-        }
+        Lexer lexer = new Lexer("(2in*5)pt");
+        Parser parser = new Parser(lexer);
+        System.out.println(parser.evaluate().toString());
     }
 }

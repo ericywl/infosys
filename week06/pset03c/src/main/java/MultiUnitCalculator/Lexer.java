@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public class Lexer {
     // map for accessing TYPEs
     private static final Map<String, Type> TYPE_MAP = new HashMap<>();
+
     static {
         TYPE_MAP.put(Type.PLUS.getS(), Type.PLUS);
         TYPE_MAP.put(Type.MINUS.getS(), Type.MINUS);
@@ -43,47 +44,59 @@ public class Lexer {
     // list to store Tokens
     private List<Token> tokenList = new LinkedList<>();
 
-	/**
-	 * Token in the stream.
-	 */
-	static class Token {
-		final Type type;
-		final String text;
+    // string to store input
+    private String inputStore;
 
-		Token(Type type, String text) {
-			this.type = type;
-			this.text = text;
-		}
+    /**
+     * Token in the stream.
+     */
+    static class Token {
+        final Type type;
+        final String text;
 
-		Token(Type type) {
-			this(type, null);
-		}
+        Token(Type type, String text) {
+            this.type = type;
+            this.text = text;
+        }
 
-		@Override
-		public String toString() {
+        Token(Type type) {
+            this(type, null);
+        }
+
+        @Override
+        public String toString() {
             return text + " " + type.toString();
         }
- 	}
+    }
 
-	@SuppressWarnings("serial")
-	static class TokenMismatchException extends Exception {
+    @SuppressWarnings("serial")
+    static class TokenMismatchException extends Exception {
         TokenMismatchException(String message) {
             super(message);
         }
-	}
+    }
 
-	/**
-	 * Use regex for lexical analysis to keep finding matches in the input
+    /**
+     * Use regex for lexical analysis to keep finding matches in the input
      * and add them to tokenList.
      * If the start of the next match is not in the same position as the end of the previous match,
      * (ie. 3.2a+b : the index of 3.2 is 0:3 and + is index 4)
      * something else not recognized by the matcher is in between,
      * so throw TokenMismatchException.
-	 */
-	public Lexer(String input) throws TokenMismatchException {
-        String input_temp = input.trim().replaceAll(" ", "");
-        Matcher matcher = CALC.matcher(input_temp);
-        Matcher invMatcher = INV_CALC.matcher(input_temp);
+     */
+    public Lexer(String input) {
+        inputStore = input.trim().replaceAll(" ", "");
+
+        try {
+            start();
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }
+
+    private void start() throws TokenMismatchException {
+        Matcher matcher = CALC.matcher(inputStore);
+        Matcher invMatcher = INV_CALC.matcher(inputStore);
 
         if (invMatcher.find()) {
             throw new TokenMismatchException("\nUnsupported token: " + invMatcher.group());
@@ -116,14 +129,9 @@ public class Lexer {
 
     // Test
     public static void main(String[] args) {
-        try {
-            Lexer lexer = new Lexer("6a");
-            for (Token token : lexer.getTokenList()) {
-                System.out.println(token);
-            }
-
-        } catch (TokenMismatchException ex) {
-            System.out.println(ex);
+        Lexer lexer = new Lexer("6a");
+        for (Token token : lexer.getTokenList()) {
+            System.out.println(token);
         }
     }
 }

@@ -9,48 +9,44 @@ import java.io.InputStreamReader;
  */
 public class MultiUnitCalculator {
 
-	/**
-	 * @param expression: a String representing a multi-unit expression, as defined in
+    /**
+     * @param expression: a String representing a multi-unit expression, as defined in
      *                    the problem set
-	 * @return the value of the expression, as a number possibly followed by
-	 *         units, e.g. "72pt", "3", or "4.882in"
-	 */
-	public String evaluate(String expression) throws Lexer.TokenMismatchException {
-		Lexer lexer = new Lexer(expression);
-		Parser parser = new Parser(lexer);
-		return parser.evaluate().toString();
-	}
+     * @return the value of the expression, as a number possibly followed by
+     * units, e.g. "72pt", "3", or "4.882in"
+     */
+    public String evaluate(String expression) {
+        Lexer lexer = new Lexer(expression);
+        Parser parser = new Parser(lexer);
+        return parser.evaluate().toString();
+    }
 
-	/**
-	 * Repeatedly reads expressions from the console, and outputs the results of
-	 * evaluating them. Inputting an empty line will terminate the program.
-	 * 
-	 * @param args: unused
-	 */
-	public static void main(String[] args) throws IOException {
-		MultiUnitCalculator calculator;
-		String result;
+    /**
+     * Repeatedly reads expressions from the console, and outputs the results of
+     * evaluating them. Inputting an empty line will terminate the program.
+     *
+     * @param args: unused
+     */
+    public static void main(String[] args) throws IOException {
+        MultiUnitCalculator calculator;
+        String result;
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		String expression;
-		while (true) {
-			// display prompt
-			System.out.print("> ");
-			// read input
-			expression = in.readLine();
-			// terminate if input empty
-			if (expression.equals(""))
-				break;
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        String expression;
+        while (true) {
+            // display prompt
+            System.out.print("> ");
+            // read input
+            expression = in.readLine();
+            // terminate if input empty
+            if (expression.equals(""))
+                break;
 
-			// evaluate
-			calculator = new MultiUnitCalculator();
-            try {
-                result = calculator.evaluate(expression);
-                // display result
-                System.out.println(result);
-            } catch (Lexer.TokenMismatchException | Parser.ParserException ex) {
-                System.out.println(ex);
-            }
-		}
-	}
+            // evaluate
+            calculator = new MultiUnitCalculator();
+            result = calculator.evaluate(expression);
+            // display result
+            System.out.println(result);
+        }
+    }
 }
