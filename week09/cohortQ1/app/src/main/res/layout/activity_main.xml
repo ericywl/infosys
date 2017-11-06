@@ -21,7 +21,7 @@
         android:id="@+id/sutdLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/sutdLogo"
+        android:src="@drawable/sutd_logo"
         android:contentDescription="@string/sutd_logo"
         android:layout_marginLeft="10pt"
         android:layout_marginRight="10pt"/>
