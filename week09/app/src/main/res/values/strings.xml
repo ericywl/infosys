@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">week09</string>
+    <string name="app_name">Cohort Question 1</string>
+    <string name="uni_name">Singapore University Of Technology and Design</string>
+    <string name="uni_address">8 Somapah Road\nSingapore 487372</string>
+    <string name="buttonText">Show Address</string>
+    <string name="buttonText2">Hide Address</string>
+    <string name="sutd_logo">SUTD Logo</string>
 </resources>
