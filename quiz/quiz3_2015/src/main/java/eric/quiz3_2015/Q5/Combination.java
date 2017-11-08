@@ -5,16 +5,14 @@ public class Combination {
     public static String recurCombination(String[][] data, String[] oneline, int group) {
         if (data == null) return "";
         if (data.length == 0) return "";
-        if (group >= data.length) return "";
+        if (group == data.length) {
+            return formatOut(oneline);
+        }
 
         StringBuilder output = new StringBuilder();
 
         for (int i = 0; i < data[group].length; i++) {
             oneline[group] = data[group][i];
-            if (group == data.length - 1) {
-                output.append(formatOut(oneline));
-            }
-
             String temp = recurCombination(data, oneline, group + 1);
             output.append(temp);
         }
