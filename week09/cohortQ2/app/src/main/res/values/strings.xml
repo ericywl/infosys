@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Cohort Q2</string>
+    <string name="submit">Submit</string>
+    <string name="hide_password">Hide Password</string>
+    <string name="show_password">Show Password</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_name">Enter Your Name</string>
+    <string name="name_hint">Name?</string>
+    <string name="hello">Hello, %1$s!</string>
+</resources>
