@@ -66,5 +66,44 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Log.i("eric", "onCreate");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("eric1", "onStart");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i("eric1", "onRestart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("eric1", "onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("eric1", "onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("eric1", "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("eric1", "" + isFinishing());
+        Log.i("eric1", "onDestroy");
     }
 }
