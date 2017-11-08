@@ -10,6 +10,7 @@ public class StronglyConnected {
         if (nodeCount > linkCount) return false;
         if (linkCount != listOfLink.size() / 2) return false;
 
+        // initialize digraph
         Digraph g = new Digraph(nodeCount);
         for (int i = 0; i < listOfLink.size(); i += 2) {
             int start = listOfLink.get(i);
@@ -18,6 +19,7 @@ public class StronglyConnected {
         }
 
         g.DFS(0);
+        // check that all vertices are visited in normal digraph
         for (boolean isVisited : g.getVisited()) {
             if (!isVisited) return false;
         }
@@ -25,6 +27,7 @@ public class StronglyConnected {
         Digraph gRev = g.getTranspose();
 
         gRev.DFS(0);
+        // check that all vertices are visited in reverse digraph
         for(boolean isVisited : g.getVisited()) {
             if (!isVisited) return false;
         }
@@ -49,19 +52,21 @@ class Digraph {
         this.numOfVertices = nodeCount;
     }
 
+    // depth first search visit
     void DFS(int v) {
         visited[v] = true;
-        for (Integer adjNode : adj[v]) {
-            if (!visited[adjNode]) DFS(adjNode);
+        for (Integer adjVertex : adj[v]) {
+            if (!visited[adjVertex]) DFS(adjVertex);
         }
     }
 
+    // reverse all edges
     Digraph getTranspose() {
         Digraph gRev = new Digraph(numOfVertices);
 
         for (int v = 0; v < numOfVertices; v++) {
-            for (Integer adjNode : adj[v]) {
-                gRev.adj[adjNode].add(v);
+            for (Integer adjVertex : adj[v]) {
+                gRev.adj[adjVertex].add(v);
             }
         }
 
