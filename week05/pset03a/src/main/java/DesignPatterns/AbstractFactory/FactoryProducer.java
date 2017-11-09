@@ -1,18 +1,17 @@
 package DesignPatterns.AbstractFactory;
 
 public class FactoryProducer {
-    public static AbstractFactory getFactory (String factoryType) {
+    public static AbstractFactory getFactory(String factoryType) {
         if (factoryType == null) return null;
+
         if (factoryType.equalsIgnoreCase("COMPONENT")) {
-            AbstractFactory af;
-            af = new ComponentFactory();
-            return af; // compiler complains if we do it all in one line
+            return new ComponentFactory();
         }
-        else if (factoryType.equalsIgnoreCase("BOARD")) {
-            AbstractFactory af;
-            af = new BoardFactory();
-            return af;
+
+        if (factoryType.equalsIgnoreCase("BOARD")) {
+            return new BoardFactory();
         }
-        else return null;
+
+        return null;
     }
 }
