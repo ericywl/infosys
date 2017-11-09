@@ -6,11 +6,12 @@ public class Combination {
         if (data == null) return "";
         if (data.length == 0) return "";
         if (group == data.length) {
-            return formatOut(oneline);
+            return format(oneline);
         }
 
         StringBuilder output = new StringBuilder();
 
+        // for each element in current array, recursively call
         for (int i = 0; i < data[group].length; i++) {
             oneline[group] = data[group][i];
             String temp = recurCombination(data, oneline, group + 1);
@@ -20,7 +21,7 @@ public class Combination {
         return output.toString();
     }
 
-    private static String formatOut(String[] oneline) {
+    private static String format(String[] oneline) {
         StringBuilder output = new StringBuilder();
 
         for (String s : oneline) {

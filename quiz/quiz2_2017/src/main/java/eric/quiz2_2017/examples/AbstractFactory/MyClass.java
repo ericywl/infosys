@@ -2,7 +2,7 @@ package eric.quiz2_2017.examples.AbstractFactory;
 
 public class MyClass {
     public static void main (String[] args) {
-        //first create a factory for producing boards
+        // first create a factory for producing boards
         AbstractFactory bf = FactoryProducer.getFactory("BOARD");
 
         // now get a breadboard from the factory
