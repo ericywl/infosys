@@ -4,14 +4,23 @@ public class Context {
     private State state;
 
     public Context() {
-        state = null;
+        state = new StopState();
     }
 
     public void setState(State state) {
-        this.state=state;
+        this.state = state;
     }
 
     public State getState() {
         return state;
+    }
+
+    public void doAction() {
+        state.doAction(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Player is currently in " + state;
     }
 }

@@ -1,7 +1,6 @@
 package eric.quiz2_2017.examples.Visitor;
 
 public class PostageVisitor implements Visitor {
-
     private double total = 0;
 
     @Override

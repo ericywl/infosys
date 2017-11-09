@@ -3,14 +3,11 @@ package eric.quiz2_2017.examples.State;
 public class StatePatternDemo {
     public static void main (String[] args) {
         Context context = new Context();
+        System.out.println(context);
 
-        StartState startState = new StartState();
-        startState.doAction(context);
-        System.out.println(context.getState().toString());
-
-        StopState stopState = new StopState();
-        stopState.doAction(context);
-        System.out.println(context.getState().toString());
-
+        context.doAction();
+        System.out.println(context);
+        context.doAction();
+        System.out.println(context);
     }
 }

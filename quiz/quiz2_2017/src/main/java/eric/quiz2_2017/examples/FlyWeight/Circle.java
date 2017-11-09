@@ -1,5 +1,7 @@
 package eric.quiz2_2017.examples.FlyWeight;
 
+import java.util.Locale;
+
 public class Circle implements Shape {
     private String color;
     private int x;
@@ -24,7 +26,10 @@ public class Circle implements Shape {
 
     @Override
     public void draw() {
-        System.out.println("Circle: Draw() [Color : " + color
-                + ", x : " + x + ", y : " + y + ", radius : " + radius);
+        String output = String.format(Locale.ENGLISH,
+                "Circle: Draw() [Color: %s, x: %d, y: %d, radius: %d]",
+                color, x, y, radius);
+
+        System.out.println(output);
     }
 }

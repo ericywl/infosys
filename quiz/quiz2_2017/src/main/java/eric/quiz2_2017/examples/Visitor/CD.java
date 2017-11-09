@@ -12,7 +12,8 @@ public class CD implements Visitable {
     }
 
     public CD(String name) {
-        if (name.equalsIgnoreCase("psy")) this.weight = 8;
+        if (name.equalsIgnoreCase("psy"))
+            this.weight = 8;
     }
 
     public double getWeight() {
