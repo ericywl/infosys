@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,11 +36,11 @@ public class MainActivity extends AppCompatActivity
         getMap = findViewById(R.id.btn_getMap);
         getNav = findViewById(R.id.btn_navigation);
 
-        // get shared preferences
+        // reading from shared preferences
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
 
-        // change button font size
+        // get setting from shared preferences and change button font size
         String chkBoxLargeFontKey = getString(R.string.chkBoxLargeFontKey);
         boolean isButtonLargeFont = sharedPref.getBoolean(chkBoxLargeFontKey, false);
         setBtnFontSize(isButtonLargeFont);
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         setMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int checkedId) {
-                switch(checkedId) {
+                switch (checkedId) {
                     case R.id.mode_bike:
                         travelMode = "b";
                         break;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         Intent mapIntent = new Intent(Intent.ACTION_VIEW);
         mapIntent.setData(geoLocation);
 
-        if(mapIntent.resolveActivity(getPackageManager()) != null) {
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(mapIntent);
         }
     }
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         Intent navIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         navIntent.setPackage("com.google.android.apps.maps");
 
-        if(navIntent.resolveActivity(getPackageManager()) != null) {
+        if (navIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(navIntent);
         }
     }
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Context ctx = getApplicationContext();
 
-        switch(id) {
+        switch (id) {
             case R.id.settings:
                 // go to SettingsActivity
                 Intent settingsIntent = new Intent(ctx, SettingsActivity.class);
@@ -142,12 +143,16 @@ public class MainActivity extends AppCompatActivity
 
     // set button font size based on checkbox setting
     private void setBtnFontSize(boolean checked) {
+        int unit = TypedValue.COMPLEX_UNIT_DIP;
+        int largeSize = 30;
+        int smallSize = 14;
+
         if (checked) {
-            getMap.setTextSize(30);
-            getNav.setTextSize(30);
+            getMap.setTextSize(unit, largeSize);
+            getNav.setTextSize(unit, largeSize);
         } else {
-            getMap.setTextSize(16);
-            getNav.setTextSize(16);
+            getMap.setTextSize(unit, smallSize);
+            getNav.setTextSize(unit, smallSize);
         }
     }
 }
