@@ -54,15 +54,14 @@ public class MainActivity extends AppCompatActivity {
         showHidePwd.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int checkedId) {
-                switch(checkedId)
-                {
+                switch (checkedId) {
                     case R.id.showPassword:
                         pwd.setTransformationMethod(null);
                         break;
+
                     case R.id.hidePassword:
                         pwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
                         break;
-
                 }
             }
         });
