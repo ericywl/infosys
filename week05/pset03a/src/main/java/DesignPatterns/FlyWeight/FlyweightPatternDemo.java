@@ -7,9 +7,9 @@ public class FlyweightPatternDemo {
     public static void main(String[] args) {
         for (int i = 0; i < 20; i++) {
             Circle circle = (Circle) ShapeFactory.getCircle(getRandomColor());
-            circle.setX(getRandomX());
-            circle.setY(getRandomY());
-            circle.setRadius(100);
+            circle.setX(getRandom());
+            circle.setY(getRandom());
+            circle.setRadius(getRandom());
             circle.draw();
         }
     }
@@ -18,11 +18,7 @@ public class FlyweightPatternDemo {
         return colors[(int) (Math.random() * colors.length)];
     }
 
-    private static int getRandomX() {
-        return (int) (Math.random() * 100);
-    }
-
-    private static int getRandomY() {
+    private static int getRandom() {
         return (int) (Math.random() * 100);
     }
 }

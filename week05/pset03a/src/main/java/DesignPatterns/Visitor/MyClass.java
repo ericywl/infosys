@@ -7,7 +7,7 @@ public class MyClass {
     public static void main(String[] args) {
         System.out.println("Hello World! This is the Visitor demo.");
 
-        ArrayList<Visitable> items = new ArrayList<Visitable>();
+        ArrayList<Visitable> items = new ArrayList<>();
         PostageVisitor postage = new PostageVisitor();
         items.add(new Book(1));
         items.add(new CD("psy"));
@@ -17,7 +17,8 @@ public class MyClass {
         for (Visitable o : items) {
             o.accept(postage);
         }
-        System.out.println(postage.getTotal());
+
+        System.out.println("Postage total: " + postage.getTotal());
     }
 }
 

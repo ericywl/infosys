@@ -1,7 +1,6 @@
 package DesignPatterns.Visitor;
 
 public class PostageVisitor implements Visitor {
-
     private double total = 0;
 
     @Override
