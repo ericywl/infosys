@@ -1,1 +1,1 @@
-include ':app', ':quiz1_2015', ':quiz2_2017', ':quiz2_2015', ':quiz3_2015'
+include ':app', ':quiz1_2015', ':quiz1_2017', ':quiz2_2015', ':quiz3_2015', ':quiz2_2017'
