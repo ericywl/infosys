@@ -20,27 +20,56 @@ class Point {
 
 public class TestRobot {
     public static void main(String[] args) {
-        final int[][] grid = {
+        final int[][] grid1 = {
                 {0, 0, 0, 0},
                 {0, 0, 1, 0},
                 {0, 0, 0, 1},
                 {0, 1, 0, 0}
         };
 
-        ArrayList<Point> path = new ArrayList<>();
-        boolean success = getPath(3, 2, path, grid);
-        System.out.println(success);
+        final int[][] grid2 = {
+                {0, 0, 0, 0},
+                {0, 0, 1, 0},
+                {0, 1, 0, 1},
+                {0, 1, 0, 0}
+        };
 
-        if (success)
-            System.out.println(path);
-        // Note that the ArrayList<Point> path is empty before calling getPath.
-        // Upon returning from getPath, path contains the coordinates
-        // of the returned path if success is true (see output).
+        ArrayList<Point> path1 = new ArrayList<>();
+        boolean success1 = getPath(3, 2, path1, grid1);
+        System.out.println(success1);
+
+        if (success1) {
+            System.out.println(path1);
+            System.out.println("");
+        }
+
+        ArrayList<Point> path2 = new ArrayList<>();
+        boolean success2 = getPath(3, 2, path2, grid2);
+        System.out.println(success2);
+
+        if (success2) {
+            System.out.println(path2);
+        }
     }
 
-    public static boolean getPath(int r, int c,
-                                  ArrayList<Point> path, final int[][] grid) {
-        
+    public static boolean getPath(int r, int c, ArrayList<Point> path, final int[][] grid) {
+        if (c < 0 || r < 0 || grid[r][c] == 1) return false;
+
+        boolean AtOrigin = (r == 0) && (c == 0);
+        boolean canGoToLeftOfTarget = getPath(r, c - 1, path, grid);
+        Point point = new Point(r, c);
+
+        if (AtOrigin || canGoToLeftOfTarget) {
+            path.add(point);
+            return true;
+        }
+
+        boolean canGoToTopOfTarget = getPath(r - 1, c, path, grid);
+        if (canGoToTopOfTarget) {
+            path.add(point);
+            return true;
+        }
+
         return false;
     }
 }
