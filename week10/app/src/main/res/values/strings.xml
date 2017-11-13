@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">cohortQ1</string>
+    <string name="app_name">Cohort Q1</string>
     <string name="comic_number_hint">comic number</string>
     <string name="json_results">JSON results</string>
     <string name="comic_url">comic url</string>
