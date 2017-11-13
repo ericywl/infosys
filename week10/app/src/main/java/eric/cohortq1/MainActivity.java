@@ -1,6 +1,9 @@
 package eric.cohortq1;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,12 +38,20 @@ public class MainActivity extends AppCompatActivity implements GetComicTask.Asyn
         textViewJSON = findViewById(R.id.comic_json);
     }
 
-   public void onClickGetComic(View view) {
+    public void onClickGetComic(View view) {
         URL xkcdURL = buildURL();
-        textViewURL.setText(xkcdURL.toString());
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = (cm == null) ? null : cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 
-        getComicTask = new GetComicTask(this);
-        getComicTask.execute(xkcdURL);
+        if (isConnected) {
+            textViewURL.setText(xkcdURL.toString());
+            getComicTask = new GetComicTask(this);
+            getComicTask.execute(xkcdURL);
+        } else {
+            Toast.makeText(this, "Not connected to internet.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
