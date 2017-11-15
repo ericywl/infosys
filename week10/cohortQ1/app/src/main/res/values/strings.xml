@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Cohort Q1</string>
+    <string name="comic_number_hint">comic number</string>
+    <string name="json_results">JSON results</string>
+    <string name="comic_url">comic url</string>
+    <string name="button_text">Get Comic from xkcd</string>
+    <string name="img_desc">xkcd Comics</string>
+</resources>
