@@ -1,19 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="eric.cohortq2.MainActivity">
 
-    <TextView
+    <EditText
+        android:id="@+id/editTextRemarks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:ems="12"
+        android:hint="@string/remarks"
+        android:inputType="textPersonName"/>
 
-</android.support.constraint.ConstraintLayout>
+    <EditText
+        android:id="@+id/editTextAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editTextRemarks"
+        android:layout_alignBottom="@+id/editTextRemarks"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_toEndOf="@+id/editTextRemarks"
+        android:layout_toRightOf="@+id/editTextRemarks"
+        android:ems="12"
+        android:hint="@string/amt"
+        android:inputType="numberDecimal"/>
+
+    <Button
+        android:id="@+id/buttonAddDatabase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editTextRemarks"
+        android:onClick="onClickAddToDb"
+        android:text="@string/add_db"/>
+
+    <EditText
+        android:id="@+id/editTextID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/buttonAddDatabase"
+        android:layout_marginTop="17dp"
+        android:hint="@string/enter_id"/>
+
+    <Button
+        android:id="@+id/buttonDeleteDatabase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextID"
+        android:onClick="onClickDeleteFromDb"
+        android:text="@string/delete_db"/>
+
+    <Button
+        android:id="@+id/buttonDisplayDatabase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonDeleteDatabase"
+        android:onClick="onClickGetEntireDb"
+        android:text="@string/display_db"/>
+
+    <TextView
+        android:id="@+id/textViewEntireDatabase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonDisplayDatabase"
+        android:text="@string/database_info"/>
+
+</RelativeLayout>

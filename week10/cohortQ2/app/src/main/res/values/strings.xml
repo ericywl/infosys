@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">cohortq2</string>
+    <string name="database_info">Database Info here</string>
+    <string name="display_db">Display Database</string>
+    <string name="delete_db">Delete From Database</string>
+    <string name="enter_id">enter id?</string>
+    <string name="add_db">Add To Database</string>
+    <string name="amt">Amount</string>
+    <string name="remarks">Remarks</string>
 </resources>
