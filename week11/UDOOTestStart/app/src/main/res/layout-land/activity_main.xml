@@ -1,74 +1,97 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/textView_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="45sp"
-        android:text="Waiting for value..."
         android:layout_alignTop="@+id/textView_distance_string"
+        android:layout_toEndOf="@+id/textView_position_string"
         android:layout_toRightOf="@+id/textView_position_string"
-        android:layout_toEndOf="@+id/textView_position_string" />
+        android:text="Waiting for value..."
+        android:textSize="45sp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/textView_distance_string"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="45sp"
-        android:text="@string/pressure"
-        android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/toggleButtonLED"
-        android:layout_alignStart="@+id/toggleButtonLED" />
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/toggleButtonLED"
+        android:text="@string/pressure"
+        android:textSize="45sp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/textView_pulse_string"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="45sp"
-        android:text="@string/pulse"
-        android:layout_below="@+id/textView_distance"
         android:layout_alignLeft="@+id/textView_distance_string"
-        android:layout_alignStart="@+id/textView_distance_string" />
+        android:layout_alignStart="@+id/textView_distance_string"
+        android:layout_below="@+id/textView_distance"
+        android:text="@string/pulse"
+        android:textSize="45sp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/textView_pulse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="45sp"
-        android:text="Waiting for value..."
-        android:layout_alignTop="@+id/textView_pulse_string"
         android:layout_alignLeft="@+id/textView_distance"
-        android:layout_alignStart="@+id/textView_distance" />
+        android:layout_alignStart="@+id/textView_distance"
+        android:layout_alignTop="@+id/textView_pulse_string"
+        android:text="Waiting for value..."
+        android:textSize="45sp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/textView_position_string"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="45sp"
-        android:text="@string/position"
-        android:layout_below="@+id/textView_pulse_string"
         android:layout_alignLeft="@+id/textView_pulse_string"
-        android:layout_alignStart="@+id/textView_pulse_string" />
+        android:layout_alignStart="@+id/textView_pulse_string"
+        android:layout_below="@+id/textView_pulse_string"
+        android:text="@string/position"
+        android:textSize="45sp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/textView_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="45sp"
-        android:text="Waiting for value..."
         android:layout_below="@+id/textView_pulse"
+        android:layout_toEndOf="@+id/textView_position_string"
         android:layout_toRightOf="@+id/textView_position_string"
-        android:layout_toEndOf="@+id/textView_position_string" />
+        android:text="Waiting for value..."
+        android:textSize="45sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/confusion_matrix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_position"
+        android:layout_marginTop="10sp"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:id="@+id/accuracy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView_position"
+        android:layout_marginLeft="20sp"
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="10sp"
+        android:layout_toEndOf="@+id/confusion_matrix"
+        android:layout_toRightOf="@+id/confusion_matrix"
+        android:textSize="25sp"/>
 
 </RelativeLayout>

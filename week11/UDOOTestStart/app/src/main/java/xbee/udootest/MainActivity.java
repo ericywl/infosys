@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Locale;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.lazy.IBk;
@@ -30,9 +31,7 @@ import wlsvm.WLSVM;
 
 
 public class MainActivity extends Activity {
-
     // private static final String TAG = "UDOO_AndroidADKFULL";
-
     private AdkManager mAdkManager;
 
     private ToggleButton buttonLED;
@@ -41,6 +40,7 @@ public class MainActivity extends Activity {
     private TextView position;
 
     private AdkReadTask mAdkReadTask;
+    private Instances testingSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 
         mAdkManager = new AdkManager((UsbManager) getSystemService(Context.USB_SERVICE));
 
-		// register a BroadcastReceiver to catch UsbManager.ACTION_USB_ACCESSORY_DETACHED action
+        // register a BroadcastReceiver to catch UsbManager.ACTION_USB_ACCESSORY_DETACHED action
         registerReceiver(mAdkManager.getUsbReceiver(), mAdkManager.getDetachedFilter());
 
         buttonLED = (ToggleButton) findViewById(R.id.toggleButtonLED);
@@ -60,7 +60,12 @@ public class MainActivity extends Activity {
         File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File f = new File(root, "iris_train.arff");
         Classifier ibk = new IBk();
+        WLSVM svmCls = new WLSVM();
         BufferedReader inputReader;
+
+        int correct = 0;
+        int incorrect = 0;
+        int[][] confusionMatrix = new int[3][3];
 
         try {
             inputReader = readFile(f);
@@ -83,14 +88,80 @@ public class MainActivity extends Activity {
                 double pred = ibk.classifyInstance(test.instance(i));
                 double act = test.instance(i).classValue();
 
-                // TODO: compare prediction results with actual class label
+                if (pred == act) {
+                    confusionMatrix[(int) act][(int) act]++;
+                    correct++;
+                } else {
+                    confusionMatrix[(int) pred][(int) act]++;
+                    incorrect++;
+                }
             }
-
-            // TODO: report number of correct and incorrect
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int[] x : confusionMatrix) {
+            String temp = format(x[0]) + format(x[1]) + format(x[2]);
+            stringBuilder.append(temp);
+            stringBuilder.append("\n");
+        }
+
+        TextView cmTextView = (TextView) findViewById(R.id.confusion_matrix);
+        cmTextView.setText(stringBuilder.toString());
+
+        double accuracy = (double) correct / (incorrect + correct);
+        TextView accTextView = (TextView) findViewById(R.id.accuracy);
+        String temp = "Correct: " + correct + "\n"
+                + "Incorrect: " + incorrect + "\n"
+                + "Accuracy: " + accuracy + "\n";
+        accTextView.setText(temp);
+    }
+
+    private void makeInstance(double slValue, double swValue, double plValue, double pwValue) {
+        Attribute Attribute1 = new Attribute("sepallength");
+        Attribute Attribute2 = new Attribute("sepalwidth");
+        Attribute Attribute3 = new Attribute("petallength");
+        Attribute Attribute4 = new Attribute("petalwidth");
+
+        // Declare the class attribute along with its values(nominal)
+        FastVector fvClassVal = new FastVector(3);
+        fvClassVal.addElement("Iris-setosa");
+        fvClassVal.addElement("Iris-versicolor");
+        fvClassVal.addElement("Iris-virginica");
+        Attribute ClassAttribute = new Attribute("class", fvClassVal);
+
+        // Declare the feature vector template
+        FastVector fvWekaAttributes = new FastVector(5);
+        fvWekaAttributes.addElement(Attribute1);
+        fvWekaAttributes.addElement(Attribute2);
+        fvWekaAttributes.addElement(Attribute3);
+        fvWekaAttributes.addElement(Attribute4);
+        fvWekaAttributes.addElement(ClassAttribute);
+
+        // Creating testing instances object with name "TestingInstance"
+        // using the feature vector template we declared above
+        // and with initial capacity of 1
+        testingSet = new Instances("TestingInstance", fvWekaAttributes, 1);
+
+        // Setting the column containing class labels:
+        testingSet.setClassIndex(testingSet.numAttributes() - 1);
+
+        // Create and fill an instance, and add it to the testingSet
+        Instance iExample = new Instance(testingSet.numAttributes());
+        iExample.setValue((Attribute) fvWekaAttributes.elementAt(0), slValue);
+        iExample.setValue((Attribute) fvWekaAttributes.elementAt(1), swValue);
+        iExample.setValue((Attribute) fvWekaAttributes.elementAt(2), plValue);
+        iExample.setValue((Attribute) fvWekaAttributes.elementAt(3), pwValue);
+        iExample.setValue((Attribute) fvWekaAttributes.elementAt(4), "Iris-setosa");
+
+        // add the instance
+        testingSet.add(iExample);
+    }
+
+    private String format(int i) {
+        return String.format(Locale.getDefault(), "%5d", i);
     }
 
     private BufferedReader readFile(File f) throws FileNotFoundException {
@@ -168,6 +239,4 @@ public class MainActivity extends Activity {
             position.setText(pos + "");
         }
     }
-
-
 }
