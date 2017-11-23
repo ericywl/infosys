@@ -3,7 +3,6 @@ package xbee.udootest;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,16 +20,15 @@ import weka.core.Instances;
 import wlsvm.WLSVM;
 
 
-public class Main2Activity extends Activity {
+public class Checkoff2 extends Activity {
     // private static final String TAG = "UDOO_AndroidADKFULL";
-    private Instances testingSet;
-    private WLSVM svmCls = new WLSVM();
+    private WLSVM svmCls;
     private static final String[] flowers = {"Iris-setosa", "Iris-versicolor", "Iris-virginica"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_checkoff2);
 
         final EditText sepalLengthInput = (EditText) findViewById(R.id.sepal_length_input);
         final EditText sepalWidthInput = (EditText) findViewById(R.id.sepal_width_input);
@@ -48,9 +46,10 @@ public class Main2Activity extends Activity {
                     inputReader = readFile(f);
                     Instances data = new Instances(inputReader);
                     data.setClassIndex(data.numAttributes() - 1);
+                    svmCls = new WLSVM();
                     svmCls.buildClassifier(data);
 
-                    Toast.makeText(Main2Activity.this, "Training done!",
+                    Toast.makeText(Checkoff2.this, "Training done!",
                             Toast.LENGTH_SHORT).show();
 
                 } catch (Exception ex) {
@@ -69,11 +68,11 @@ public class Main2Activity extends Activity {
                     double plValue = Double.parseDouble(petalLengthInput.getText().toString());
                     double pwValue = Double.parseDouble(petalWidthInput.getText().toString());
 
-                    Instance instance = makeInstance(slValue, swValue, plValue, pwValue);
-                    double classified = svmCls.classifyInstance(testingSet.firstInstance());
+                    Instances set = makeInstance(slValue, swValue, plValue, pwValue);
+                    double classified = svmCls.classifyInstance(set.firstInstance());
 
-                    Toast.makeText(Main2Activity.this, "The class is "
-                                    + flowers[(int) classified], Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Checkoff2.this, "The flower is "
+                                    + flowers[(int) classified] + "!", Toast.LENGTH_SHORT).show();
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -82,7 +81,7 @@ public class Main2Activity extends Activity {
         });
     }
 
-    private Instance makeInstance(double slValue, double swValue, double plValue, double pwValue) {
+    private Instances makeInstance(double slValue, double swValue, double plValue, double pwValue) {
         Attribute Attribute1 = new Attribute("sepallength");
         Attribute Attribute2 = new Attribute("sepalwidth");
         Attribute Attribute3 = new Attribute("petallength");
@@ -101,11 +100,12 @@ public class Main2Activity extends Activity {
         fvWekaAttributes.addElement(Attribute2);
         fvWekaAttributes.addElement(Attribute3);
         fvWekaAttributes.addElement(Attribute4);
+        fvWekaAttributes.addElement(Attribute4);
 
         // Creating testing instances object with name "TestingInstance"
         // using the feature vector template we declared above
         // and with initial capacity of 1
-        testingSet = new Instances("TestingInstance", fvWekaAttributes, 1);
+        Instances testingSet = new Instances("TestingInstance", fvWekaAttributes, 1);
 
         // Setting the column containing class labels:
         testingSet.setClassIndex(testingSet.numAttributes() - 1);
@@ -117,9 +117,12 @@ public class Main2Activity extends Activity {
         iExample.setValue((Attribute) fvWekaAttributes.elementAt(2), plValue);
         iExample.setValue((Attribute) fvWekaAttributes.elementAt(3), pwValue);
 
+        // dummy value
+        iExample.setValue((Attribute) fvWekaAttributes.elementAt(4), "Iris-setosa");
+
         // add the instance
         testingSet.add(iExample);
-        return iExample;
+        return testingSet;
     }
 
     private BufferedReader readFile(File f) throws FileNotFoundException {

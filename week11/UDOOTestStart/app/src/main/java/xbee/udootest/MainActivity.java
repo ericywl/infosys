@@ -5,42 +5,37 @@ import android.content.Context;
 import android.hardware.usb.UsbManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import me.palazzetti.adktoolkit.AdkManager;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Locale;
-
-import weka.classifiers.Classifier;
-import weka.classifiers.lazy.IBk;
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import wlsvm.WLSVM;
 
-
 public class MainActivity extends Activity {
+    private static final int INSTANCES_CAPACITY = 4;
+
     // private static final String TAG = "UDOO_AndroidADKFULL";
     private AdkManager mAdkManager;
+    private String stressBool;
+    private int instanceNo = 0;
 
     private ToggleButton buttonLED;
     private TextView distance;
     private TextView pulse;
     private TextView position;
 
+    private WLSVM svmCls;
+    private Instances set;
+    private FastVector fvWekaAttributes;
+
     private AdkReadTask mAdkReadTask;
-    private Instances testingSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,125 +43,95 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mAdkManager = new AdkManager((UsbManager) getSystemService(Context.USB_SERVICE));
-
-        // register a BroadcastReceiver to catch UsbManager.ACTION_USB_ACCESSORY_DETACHED action
         registerReceiver(mAdkManager.getUsbReceiver(), mAdkManager.getDetachedFilter());
+
+        initInstances();
 
         buttonLED = (ToggleButton) findViewById(R.id.toggleButtonLED);
         distance = (TextView) findViewById(R.id.textView_distance);
         pulse = (TextView) findViewById(R.id.textView_pulse);
         position = (TextView) findViewById(R.id.textView_position);
 
-        File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File f = new File(root, "iris_train.arff");
-        Classifier ibk = new IBk();
-        WLSVM svmCls = new WLSVM();
-        BufferedReader inputReader;
+        // Set to Rest
+        Button trainRest = (Button) findViewById(R.id.train_rest);
+        trainRest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stressBool = "rest";
+                Toast.makeText(MainActivity.this, "stressBool set to rest.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        int correct = 0;
-        int incorrect = 0;
-        int[][] confusionMatrix = new int[3][3];
+        // Set to Stress
+        Button trainStress = (Button) findViewById(R.id.train_stress);
+        trainStress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stressBool = "stress";
+                Toast.makeText(MainActivity.this, "stressBool set to stress.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        try {
-            inputReader = readFile(f);
-            Instances data = new Instances(inputReader);
-            data.setClassIndex(data.numAttributes() - 1);
-            ibk.buildClassifier(data);
+        // Start training data
+        Button startTrain = (Button) findViewById(R.id.start_train);
+        startTrain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (instanceNo != 4) {
+                    Toast.makeText(MainActivity.this,
+                            "Capacity not reached.\nPlease add more data.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+                try {
+                    svmCls.buildClassifier(set);
+                    Toast.makeText(MainActivity.this, "Training done.",
+                            Toast.LENGTH_SHORT).show();
 
-        f = new File(root, "iris_test.arff");
-
-        try {
-            inputReader = readFile(f);
-            Instances test = new Instances(inputReader);
-            test.setClassIndex(test.numAttributes() - 1);
-
-            for (int i = 0; i < test.numInstances(); i++) {
-                double pred = ibk.classifyInstance(test.instance(i));
-                double act = test.instance(i).classValue();
-
-                if (pred == act) {
-                    confusionMatrix[(int) act][(int) act]++;
-                    correct++;
-                } else {
-                    confusionMatrix[(int) pred][(int) act]++;
-                    incorrect++;
+                } catch (Exception ex) {
+                    Toast.makeText(MainActivity.this, "Training error!",
+                            Toast.LENGTH_SHORT).show();
+                    ex.printStackTrace();
                 }
             }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int[] x : confusionMatrix) {
-            String temp = format(x[0]) + format(x[1]) + format(x[2]);
-            stringBuilder.append(temp);
-            stringBuilder.append("\n");
-        }
-
-        TextView cmTextView = (TextView) findViewById(R.id.confusion_matrix);
-        cmTextView.setText(stringBuilder.toString());
-
-        double accuracy = (double) correct / (incorrect + correct);
-        TextView accTextView = (TextView) findViewById(R.id.accuracy);
-        String temp = "Correct: " + correct + "\n"
-                + "Incorrect: " + incorrect + "\n"
-                + "Accuracy: " + accuracy + "\n";
-        accTextView.setText(temp);
+        });
     }
 
-    private void makeInstance(double slValue, double swValue, double plValue, double pwValue) {
-        Attribute Attribute1 = new Attribute("sepallength");
-        Attribute Attribute2 = new Attribute("sepalwidth");
-        Attribute Attribute3 = new Attribute("petallength");
-        Attribute Attribute4 = new Attribute("petalwidth");
+    private void initInstances() {
+        Attribute Attribute1 = new Attribute("oxygen");
+        Attribute Attribute2 = new Attribute("pulse");
 
-        // Declare the class attribute along with its values(nominal)
-        FastVector fvClassVal = new FastVector(3);
-        fvClassVal.addElement("Iris-setosa");
-        fvClassVal.addElement("Iris-versicolor");
-        fvClassVal.addElement("Iris-virginica");
+        FastVector fvClassVal = new FastVector(2);
+        fvClassVal.addElement("rest");
+        fvClassVal.addElement("stress");
         Attribute ClassAttribute = new Attribute("class", fvClassVal);
 
-        // Declare the feature vector template
-        FastVector fvWekaAttributes = new FastVector(5);
+        fvWekaAttributes = new FastVector(3);
         fvWekaAttributes.addElement(Attribute1);
         fvWekaAttributes.addElement(Attribute2);
-        fvWekaAttributes.addElement(Attribute3);
-        fvWekaAttributes.addElement(Attribute4);
         fvWekaAttributes.addElement(ClassAttribute);
 
-        // Creating testing instances object with name "TestingInstance"
-        // using the feature vector template we declared above
-        // and with initial capacity of 1
-        testingSet = new Instances("TestingInstance", fvWekaAttributes, 1);
-
-        // Setting the column containing class labels:
-        testingSet.setClassIndex(testingSet.numAttributes() - 1);
-
-        // Create and fill an instance, and add it to the testingSet
-        Instance iExample = new Instance(testingSet.numAttributes());
-        iExample.setValue((Attribute) fvWekaAttributes.elementAt(0), slValue);
-        iExample.setValue((Attribute) fvWekaAttributes.elementAt(1), swValue);
-        iExample.setValue((Attribute) fvWekaAttributes.elementAt(2), plValue);
-        iExample.setValue((Attribute) fvWekaAttributes.elementAt(3), pwValue);
-        iExample.setValue((Attribute) fvWekaAttributes.elementAt(4), "Iris-setosa");
-
-        // add the instance
-        testingSet.add(iExample);
+        set = new Instances("StressLevel", fvWekaAttributes, INSTANCES_CAPACITY);
+        set.setClassIndex(set.numAttributes() - 1);
     }
 
-    private String format(int i) {
-        return String.format(Locale.getDefault(), "%5d", i);
-    }
+    private void addToInstances(double oxygen, double pulse, String stressBool) {
+        if (instanceNo >= INSTANCES_CAPACITY) {
+            Toast.makeText(this, "Capacity reached!\nNew Instances is not added.",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-    private BufferedReader readFile(File f) throws FileNotFoundException {
-        FileReader fReader = new FileReader(f);
-        return new BufferedReader(fReader);
+        Instance instance = new Instance(set.numAttributes());
+        instance.setValue((Attribute) fvWekaAttributes.elementAt(0), oxygen);
+        instance.setValue((Attribute) fvWekaAttributes.elementAt(1), pulse);
+        instance.setValue((Attribute) fvWekaAttributes.elementAt(2), stressBool);
+
+        set.add(instance);
+        instanceNo++;
+        Toast.makeText(this, "Instance added.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -208,7 +173,6 @@ public class MainActivity extends Activity {
      * continuous read task out of the UI main thread
      */
     private class AdkReadTask extends AsyncTask<Void, String, Void> {
-
         private boolean running = true;
 
         public void pause() {
@@ -216,7 +180,7 @@ public class MainActivity extends Activity {
         }
 
         protected Void doInBackground(Void... params) {
-//	    	Log.i("ADK demo bi", "start adkreadtask");
+            // Log.i("ADK demo bi", "start adkreadtask");
             while (running) {
                 publishProgress(mAdkManager.readSerial());
             }
@@ -224,19 +188,22 @@ public class MainActivity extends Activity {
         }
 
         protected void onProgressUpdate(String... progress) {
-
-            float pulseRate = (int) progress[0].charAt(0);
-            float oxygenLvl = (int) progress[0].charAt(1);
-            float pos = (int) progress[0].charAt(2);
+            double pulseRate = (int) progress[0].charAt(0);
+            double oxygenLvl = (int) progress[0].charAt(1);
+            double pos = (int) progress[0].charAt(2);
             int max = 255;
+
             if (pulseRate > max) pulseRate = max;
             if (oxygenLvl > max) oxygenLvl = max;
             if (pos > max) pos = max;
 
-//            DecimalFormat df = new DecimalFormat("#.#");
+            // DecimalFormat df = new DecimalFormat("#.#");
             distance.setText(pulseRate + " (bpm)");
             pulse.setText(oxygenLvl + " (pct)");
             position.setText(pos + "");
+
+            final String finalStressBool = stressBool;
+            addToInstances(pulseRate, oxygenLvl, finalStressBool);
         }
     }
 }
