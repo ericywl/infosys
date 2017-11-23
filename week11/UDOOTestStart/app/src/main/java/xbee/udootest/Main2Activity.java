@@ -1,29 +1,19 @@
 package xbee.udootest;
 
 import android.app.Activity;
-import android.content.Context;
-import android.hardware.usb.UsbManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import me.palazzetti.adktoolkit.AdkManager;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.Locale;
 
-import weka.classifiers.Classifier;
-import weka.classifiers.lazy.IBk;
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
@@ -33,29 +23,24 @@ import wlsvm.WLSVM;
 
 public class Main2Activity extends Activity {
     // private static final String TAG = "UDOO_AndroidADKFULL";
-    private AdkManager mAdkManager;
     private Instances testingSet;
+    private WLSVM svmCls = new WLSVM();
+    private static final String[] flowers = {"Iris-setosa", "Iris-versicolor", "Iris-virginica"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
-        mAdkManager = new AdkManager((UsbManager) getSystemService(Context.USB_SERVICE));
-
-        // register a BroadcastReceiver to catch UsbManager.ACTION_USB_ACCESSORY_DETACHED action
-        registerReceiver(mAdkManager.getUsbReceiver(), mAdkManager.getDetachedFilter());
-
-        final EditText sepalLengthInput = findViewById(R.id.sepal_length_input);
-        final EditText sepalWidthInput = findViewById(R.id.sepal_width_input);
-        final EditText petalLengthInput = findViewById(R.id.petal_length_input);
-        final EditText petalWidthInput = findViewById(R.id.petal_width_input);
-        Button trainBtn = findViewById(R.id.train_btn);
+        final EditText sepalLengthInput = (EditText) findViewById(R.id.sepal_length_input);
+        final EditText sepalWidthInput = (EditText) findViewById(R.id.sepal_width_input);
+        final EditText petalLengthInput = (EditText) findViewById(R.id.petal_length_input);
+        final EditText petalWidthInput = (EditText) findViewById(R.id.petal_width_input);
+        Button trainBtn = (Button) findViewById(R.id.train_btn);
         trainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 BufferedReader inputReader;
-                WLSVM svmCls = new WLSVM();
                 File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                 File f = new File(root, "iris_train.arff");
 
@@ -64,36 +49,35 @@ public class Main2Activity extends Activity {
                     Instances data = new Instances(inputReader);
                     data.setClassIndex(data.numAttributes() - 1);
                     svmCls.buildClassifier(data);
-                    weka.core.SerializationHelper.write("svmModel", svmCls);
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-                Toast.makeText(Main2Activity.this, "Training done!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Button classifyBtn = findViewById(R.id.classify_btn);
-        classifyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    WLSVM svmCls = (WLSVM) weka.core.SerializationHelper.read("svmModel");
-                    double slValue = Double.parseDouble(sepalLengthInput);
-                    double swValue = Double.parseDouble(sepalWidthInput);
-                    double plValue = Double.parseDouble(petalLengthInput);
-                    double pwValue = Double.parseDouble(petalWidthInput);
-
-                    double classified =
-                            svmCls.classifyInstance(makeInstance(slValue, swValue, plValue, pwValue));
-                    Toast.makeText(Main2Activity.this, "The class is " + classified,
+                    Toast.makeText(Main2Activity.this, "Training done!",
                             Toast.LENGTH_SHORT).show();
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+            }
+        });
 
+        Button classifyBtn = (Button) findViewById(R.id.classify_btn);
+        classifyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    double slValue = Double.parseDouble(sepalLengthInput.getText().toString());
+                    double swValue = Double.parseDouble(sepalWidthInput.getText().toString());
+                    double plValue = Double.parseDouble(petalLengthInput.getText().toString());
+                    double pwValue = Double.parseDouble(petalWidthInput.getText().toString());
+
+                    Instance instance = makeInstance(slValue, swValue, plValue, pwValue);
+                    double classified = svmCls.classifyInstance(testingSet.firstInstance());
+
+                    Toast.makeText(Main2Activity.this, "The class is "
+                                    + flowers[(int) classified], Toast.LENGTH_SHORT).show();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }
@@ -117,7 +101,6 @@ public class Main2Activity extends Activity {
         fvWekaAttributes.addElement(Attribute2);
         fvWekaAttributes.addElement(Attribute3);
         fvWekaAttributes.addElement(Attribute4);
-        fvWekaAttributes.addElement(ClassAttribute);
 
         // Creating testing instances object with name "TestingInstance"
         // using the feature vector template we declared above
@@ -133,7 +116,6 @@ public class Main2Activity extends Activity {
         iExample.setValue((Attribute) fvWekaAttributes.elementAt(1), swValue);
         iExample.setValue((Attribute) fvWekaAttributes.elementAt(2), plValue);
         iExample.setValue((Attribute) fvWekaAttributes.elementAt(3), pwValue);
-        iExample.setValue((Attribute) fvWekaAttributes.elementAt(4), "Iris-setosa");
 
         // add the instance
         testingSet.add(iExample);
@@ -143,12 +125,6 @@ public class Main2Activity extends Activity {
     private BufferedReader readFile(File f) throws FileNotFoundException {
         FileReader fReader = new FileReader(f);
         return new BufferedReader(fReader);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(mAdkManager.getUsbReceiver());
     }
 }
 
